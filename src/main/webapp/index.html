@@ -1,0 +1,49 @@
+<html>
+<head>
+  <title>Fedora Commons Repository 4.0</title>
+  <link rel="icon" type="image/png" href="static/images/fcrepo-favicon.png"/>
+  <script src="static/js/jquery-1.9.1.min.js" ></script>
+
+  <script src="static/js/bootstrap-3.0.0.min.js"></script>
+  <link href="static/css/bootstrap-3.0.0.min.css" rel="stylesheet" />
+    <style >
+        .thumbnail {
+            background: transparent; border: none; margin-bottom: 1.5em
+        }
+
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+        article p {
+          padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<article class="container">
+  <div class="col-md-12">
+    <div class="jumbotron">
+      <a href="rest/" class="thumbnail" style=""><img src="static/images/fedora_logo_10in.png" /></a>
+      <p>Fedora is a robust, modular, open source repository system for the management and dissemination of digital content. It is especially suited for digital libraries and archives, both
+for access and preservation. It is also used to provide specialized access to very large and complex digital collections of historic and cultural materials as well as scientific
+data.</p>
+      <p class="text-center"><a class="btn btn-primary btn-lg" href="rest/">Fedora REST API endpoint</a></p>
+      <p>Fedora is maintained by a community of volunteers. <a href="http://duraspace.org/register-repository" target="_duraspace">Register your repository</a> at <a href="http://duraspace.org/" target="_duraspace">DuraSpace</a> in order to facilitate information sharing and collaboration within the community.</p>
+    </div>
+  </div>
+</article>
+
+<footer class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="container">
+    <ul class="nav navbar-nav">
+      <li><a href="https://jira.duraspace.org/browse/FCREPO">Issue Tracker</a></li>
+      <li><a href="https://wiki.duraspace.org/display/FF">Wiki</a></li>
+      <li><a href="https://wiki.duraspace.org/display/FF/Documentation">REST API Documentation</a></li>
+      <li><a href="http://fedora.info">Ontologies and Specifications</a></li>
+    </ul>
+    <p class="navbar-text pull-right">Release: <span id="version">${project.version}</span> | Build <span id="build">#${buildNumber}</span> (<span id="timestamp">${build.timestamp}</span>)</p>
+  </div>
+</footer>
+</body>
+</html>

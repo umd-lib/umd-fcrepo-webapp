@@ -13,17 +13,12 @@ ext {
     jerseyVersion = '2.22.2'
 }
 
-
-// In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
-        mavenCentral()
-        mavenLocal()
+    mavenCentral()
+    mavenLocal()
 }
 
-// In this section you declare the dependencies for your production and test code
 dependencies {
     compile group: 'org.fcrepo', name: 'fcrepo-kernel-api', version: fcrepoVersion
     compile group: 'org.fcrepo', name: 'fcrepo-kernel-modeshape', version: fcrepoVersion
@@ -38,5 +33,4 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-web', version: springVersion
     compile group: 'org.glassfish.jersey.ext', name: 'jersey-spring3', version: jerseyVersion
 }
-
 

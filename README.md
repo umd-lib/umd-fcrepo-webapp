@@ -43,6 +43,6 @@ The compiled application can be found in `./build/libs/amherst-fedora-webapp.war
 
 ## Maintainers
 
-Aaron Coburn
-Bethany Seeger
+  * Aaron Coburn
+  * Bethany Seeger
 

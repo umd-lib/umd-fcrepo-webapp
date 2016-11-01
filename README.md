@@ -34,7 +34,7 @@ Likewise, the ActiveMQ configuration should be managed separately from the runni
 
 ## Building
 
-The web application can be build with gradle:
+The web application can be built with gradle:
 
     ./gradlew build
 

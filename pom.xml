@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.fcrepo</groupId>
+    <artifactId>fcrepo-parent</artifactId>
+    <version>4.7.0</version>
+  </parent>
+
+  <groupId>edu.amherst.acdc</groupId>
+  <artifactId>amherst-fcrepo-webapp</artifactId>
+  <name>Fedora Repository Deployable Web Application</name>
+  <description>The Fedora web application</description>
+  <version>0.1.0</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <fcrepo.version>4.7.0</fcrepo.version>
+    <logback.version>1.1.7</logback.version>
+    <pgsql.version>9.4.1211</pgsql.version>
+    <spring.version>4.3.3.RELEASE</spring.version>
+    <jersey.version>2.24</jersey.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-kernel-modeshape</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-jms</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-http-api</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-auth-common</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-module-auth-webac</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-spring3</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+    <!-- JDBC dependencies-->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${pgsql.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <attachClasses>true</attachClasses>
+          <webResources>
+            <resource>
+              <directory>src/main/webapp</directory>
+              <filtering>true</filtering>
+              <includes>
+                <include>index.html</include>
+              </includes>
+            </resource>
+          </webResources>
+            <archive>
+              <index>true</index>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

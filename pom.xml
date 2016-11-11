@@ -6,11 +6,11 @@
     <version>4.7.0</version>
   </parent>
 
-  <groupId>edu.amherst.acdc</groupId>
-  <artifactId>amherst-fcrepo-webapp</artifactId>
+  <groupId>edu.umd.lib</groupId>
+  <artifactId>umd-fcrepo-webapp</artifactId>
   <name>Fedora Repository Deployable Web Application</name>
   <description>The Fedora web application</description>
-  <version>0.1.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>
@@ -53,6 +53,11 @@
       <version>${fcrepo.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-audit</artifactId>
+      <version>${fcrepo.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-spring3</artifactId>
       <version>${jersey.version}</version>
@@ -64,6 +69,11 @@
       <version>${pgsql.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
@@ -93,13 +103,13 @@
               </includes>
             </resource>
           </webResources>
-            <archive>
-              <index>true</index>
-              <manifest>
-                <addClasspath>true</addClasspath>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>

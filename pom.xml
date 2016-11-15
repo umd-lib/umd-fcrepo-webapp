@@ -21,6 +21,19 @@
     <jersey.version>2.24</jersey.version>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>nexus</id>
+      <name>Releases</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus</id>
+      <name>Snapshots</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>

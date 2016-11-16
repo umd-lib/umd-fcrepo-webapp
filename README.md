@@ -45,5 +45,5 @@ The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target` dir
 
 ## Special Thanks
 
-This repository is based on the [Amherst College custom Fedora build](https://github.com/acoburn/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.
+This repository is based on the [Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.
 

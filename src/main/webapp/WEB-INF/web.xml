@@ -10,18 +10,18 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>WEB-INF/classes/spring/repository.xml</param-value>
   </context-param>
+  <context-param>
+    <param-name>casServerUrlPrefix</param-name>
+    <param-value>${umd.cas.serverURLPrefix}</param-value>
+  </context-param>
 
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  <listener>
+    <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+  </listener>
 
-  <security-role>
-    <role-name>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</role-name>
-  </security-role>
-  <security-role>
-    <role-name>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</role-name>
-  </security-role>
-    
   <servlet>
     <servlet-name>jersey-servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -30,24 +30,31 @@
       <param-value>org.fcrepo.http.commons.FedoraApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
-    <!-- Grouper-to-fcrepo role name mappings -->
-    <security-role-ref>
-      <!-- fcrepo webapp role name -->
-      <role-name>fedoraAdmin</role-name>
-      <!-- Grouper role name -->
-      <role-link>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</role-link>
-    </security-role-ref> 
-    <security-role-ref>
-      <!-- fcrepo webapp role name -->
-      <role-name>fedoraUser</role-name>
-      <!-- Grouper role name -->
-      <role-link>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</role-link>
-    </security-role-ref> 
   </servlet>
 
+  <servlet>
+    <servlet-name>authn-servlet</servlet-name>
+    <servlet-class>edu.umd.lib.fcrepo.AuthnServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>logout-servlet</servlet-name>
+    <servlet-class>edu.umd.lib.fcrepo.LogoutServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
     <url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>authn-servlet</servlet-name>
+    <url-pattern>/user/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>logout-servlet</servlet-name>
+    <url-pattern>/user/logout</url-pattern>
   </servlet-mapping>
 
   <filter>
@@ -64,5 +71,103 @@
     <error-code>403</error-code>
     <location>/errors/403.html</location>
   </error-page>
+
+  <filter>
+    <filter-name>CAS Single Sign Out Filter</filter-name>
+    <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CAS Single Sign Out Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>CAS Authentication Filter</filter-name>
+    <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+    <init-param>
+      <param-name>casServerLoginUrl</param-name>
+      <param-value>${umd.cas.serverURLPrefix}/login</param-value>
+    </init-param>
+    <init-param>
+      <param-name>serverName</param-name>
+      <param-value>${fcrepo.serverName}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ignorePattern</param-name>
+      <param-value>logout</param-value>
+    </init-param>
+  </filter>
+  <!-- only redirect to login for unauthenticated users in the /user URL space -->
+  <filter-mapping>
+    <filter-name>CAS Authentication Filter</filter-name>
+    <url-pattern>/user/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>CAS Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
+    <init-param>
+      <param-name>casServerUrlPrefix</param-name>
+      <param-value>${umd.cas.serverURLPrefix}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>serverName</param-name>
+      <param-value>${fcrepo.serverName}</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CAS Validation Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+    <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>Fedora Roles Filter</filter-name>
+    <filter-class>edu.umd.lib.fcrepo.FedoraRolesFilter</filter-class>
+    <init-param>
+      <param-name>ldapURL</param-name>
+      <param-value>${umd.ldap.url}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>baseDN</param-name>
+      <param-value>${umd.ldap.baseDN}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bindDN</param-name>
+      <param-value>${umd.ldap.bindDN}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bindPassword</param-name>
+      <param-value>${umd.ldap.bindPassword}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>memberAttribute</param-name>
+      <param-value>${umd.ldap.memberAttribute}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>adminGroup</param-name>
+      <param-value>${umd.ldap.group.fedoraAdmin}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>userGroup</param-name>
+      <param-value>${umd.ldap.group.fedoraUser}</param-value>
+    </init-param>
+  </filter>
+
+  <!-- look up user role on any request to the /user or /rest URL spaces -->
+  <!-- we can omit the /static and / (root) spaces, since those are not access-restricted -->
+  <filter-mapping>
+    <filter-name>Fedora Roles Filter</filter-name>
+    <url-pattern>/rest/*</url-pattern>
+    <url-pattern>/user/*</url-pattern>
+  </filter-mapping>
 
 </web-app>

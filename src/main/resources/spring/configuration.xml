@@ -3,8 +3,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:task="http://www.springframework.org/schema/task"
-  xmlns:p="http://www.springframework.org/schema/p"
-  xmlns:c="http://www.springframework.org/schema/c"
   xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="
   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -21,12 +19,11 @@
 
 
   <!-- ********************************** MODESHAPE configuration ********************************** -->
-  <bean name="modeshapeRepofactory"
-    class="org.fcrepo.kernel.modeshape.spring.ModeShapeRepositoryFactoryBean"
-    p:repositoryConfiguration="${fcrepo.modeshape.configuration}"
-    depends-on="authenticationProvider"/>
+  <bean name="modeshapeRepofactory" class="org.fcrepo.kernel.modeshape.spring.ModeShapeRepositoryFactoryBean" depends-on="authenticationProvider">
+    <property name="repositoryConfiguration" value="${fcrepo.modeshape.configuration:classpath:/repository.json}"/>
+  </bean>
 
-  <!-- Optional PrincipalProvider that will inspect the request header, "some-header", for user role values -->
+  <!-- Optional PrincipalProvider that will inspect a request header for user role values -->
   <bean name="headerProvider" class="org.fcrepo.auth.common.HttpHeaderPrincipalProvider">
     <property name="headerName" value="X-UMDLibDelegatePrincipal"/>
     <property name="separator" value=","/>
@@ -66,14 +63,13 @@
 
   <!-- ************************************* JMS/Eventing Configuration ************************************* -->
   <!-- publishes events from the internal bus to JMS -->
-  <bean class="org.fcrepo.jms.JMSTopicPublisher"/>
+  <bean class="org.fcrepo.jms.JMSQueuePublisher">
+    <constructor-arg value="fedora"/>
+  </bean>
 
-  <bean id="connectionFactory"
-    class="org.apache.activemq.ActiveMQConnectionFactory" depends-on="jmsBroker"
-    p:brokerURL="vm://localhost:61616?create=false"/>
-
-  <bean name="jmsBroker" class="org.apache.activemq.xbean.BrokerFactoryBean"
-    p:config="${fcrepo.activemq.configuration}" p:start="true"/>
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="${fcrepo.activemq.url:tcp://localhost:61616}"/>
+  </bean>
 
   <!-- translates events into JMS header-only format-->
   <bean class="org.fcrepo.jms.DefaultMessageFactory"/>
@@ -96,7 +92,4 @@
   <task:executor id="taskExecutor" pool-size="1" />
   <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler" />
 
-  <!-- Auditing -->
-  <!-- publishes events from the internal bus to JMS -->
-  <bean class="org.fcrepo.audit.InternalAuditor"/>
 </beans>

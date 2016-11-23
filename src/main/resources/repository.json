@@ -1,0 +1,34 @@
+{
+    "name" : "repo",
+    "eventBusSize" : 2048,
+    "jndiName" : "",
+    "workspaces" : {
+        "predefined" : ["default"],
+        "default" : "default",
+        "allowCreation" : true
+    },
+    "storage" : {
+        "persistence": {
+            "type" : "db",
+            "connectionUrl": "${fcrepo.db.url}",
+            "driver" : "${fcrepo.db.driver}",
+            "username" : "${fcrepo.db.username}",
+            "password" : "${fcrepo.db.password}"
+        },
+        "binaryStorage" : {
+            "type" : "file",
+            "directory" : "${fcrepo.binary.directory:target/binaries}",
+            "minimumBinarySizeInBytes" : 4096
+        }
+    },
+    "security" : {
+        "anonymous" : {
+            "roles" : ["readonly","readwrite","admin"],
+            "useOnFailedLogin" : false
+        },
+        "providers" : [
+            { "classname" : "org.fcrepo.auth.common.ServletContainerAuthenticationProvider" }
+        ]
+    },
+    "node-types" : ["fedora-node-types.cnd", "classpath:/namespaces.cnd"]
+}

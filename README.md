@@ -47,3 +47,8 @@ The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target` dir
 
 This repository is based on the [Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.
 
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
+

@@ -10,7 +10,7 @@
   <artifactId>umd-fcrepo-webapp</artifactId>
   <name>Fedora Repository Deployable Web Application</name>
   <description>The Fedora web application</description>
-  <version>1.2.0</version>
+  <version>1.3.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>

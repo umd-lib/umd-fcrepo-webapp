@@ -3,18 +3,18 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo-parent</artifactId>
-    <version>4.7.4</version>
+    <version>4.7.5</version>
   </parent>
 
   <groupId>edu.umd.lib</groupId>
   <artifactId>umd-fcrepo-webapp</artifactId>
   <name>Fedora Repository Deployable Web Application</name>
   <description>The Fedora web application</description>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <packaging>war</packaging>
 
   <properties>
-    <fcrepo.version>4.7.4-umd-1.0</fcrepo.version>
+    <fcrepo.version>4.7.5</fcrepo.version>
     <logback.version>1.1.7</logback.version>
     <pgsql.version>9.4.1211</pgsql.version>
     <spring.version>4.3.3.RELEASE</spring.version>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-module-auth-webac</artifactId>
-      <version>4.7.4</version>
+      <version>${fcrepo.version}</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>

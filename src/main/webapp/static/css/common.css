@@ -1,0 +1,112 @@
+.fcrepo_root #action_delete {
+    display: none;
+}
+
+body {
+    padding-bottom: 40px;
+}
+
+.fcrepo_binary #action_create {
+    display: none;
+}
+
+.fcrepo_binary #action_import, .fcrepo_resource #action_import {
+    display: none;
+}
+
+dl {
+    padding-left: 19px;
+}
+
+dd {
+    padding-left: 38px;
+}
+
+.well dl {
+    padding-left: 0;
+}
+
+.well {
+    text-indent: -35px;
+    padding-left: 54px;
+}
+
+#metadata .panel-body {
+    word-wrap: break-word;
+    text-indent: -35px;
+    padding-left: 35px;
+}
+
+#metadata .panel-body .nodetype-properties {
+    text-indent: 0px;
+}
+
+#metadata .panel-body .nodetype-properties h5 {
+    font-weight: bold;
+}
+
+#binary_payload_container {
+    display: none;
+}
+
+#actions.visible-lg.in, #actions.visible-lg.collapsing, #actions.visible-md.in, #actions.visible-md.collapsing  {
+    display: block !important;
+}
+
+#toggle-actions {
+    float:right;
+    margin-bottom: 1em;
+}
+
+#actions {
+    margin-bottom: 3em;
+}
+
+.namespace {
+    font-size: .8em;
+}
+
+.panel-content {
+	text-indent:60px;
+	background-color:#fff;
+	border:none;
+}
+
+.panel .panel-heading {
+	font-size: 20px;
+}
+
+.panel-content .panel-heading {
+	font-size: 16px;
+}
+
+.ctitle:after {
+    content: "-";
+    color: grey;
+    float: right;
+    font-size: 0.8em;
+    line-height: normal;
+}
+
+.collapsed .ctitle:after {
+    color: grey;
+    content: "+";
+    float: right;
+    font-size: 0.8em;
+    line-height: normal;
+}
+
+.panel-title > a {
+    color: #428bca;
+}
+
+.nav-form {
+    text-align: center;
+}
+
+.standalone {
+    margin-bottom: 20px;
+}
+#showErrorModal {
+    display: none;
+}

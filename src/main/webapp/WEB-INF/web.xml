@@ -15,6 +15,13 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
+  <security-role>
+    <role-name>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</role-name>
+  </security-role>
+  <security-role>
+    <role-name>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</role-name>
+  </security-role>
+    
   <servlet>
     <servlet-name>jersey-servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -23,6 +30,19 @@
       <param-value>org.fcrepo.http.commons.FedoraApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <!-- Grouper-to-fcrepo role name mappings -->
+    <security-role-ref>
+      <!-- fcrepo webapp role name -->
+      <role-name>fedoraAdmin</role-name>
+      <!-- Grouper role name -->
+      <role-link>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</role-link>
+    </security-role-ref> 
+    <security-role-ref>
+      <!-- fcrepo webapp role name -->
+      <role-name>fedoraUser</role-name>
+      <!-- Grouper role name -->
+      <role-link>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</role-link>
+    </security-role-ref> 
   </servlet>
 
   <servlet-mapping>

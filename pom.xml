@@ -14,7 +14,7 @@
   <packaging>war</packaging>
 
   <properties>
-    <fcrepo.version>4.7.5</fcrepo.version>
+    <fcrepo.version>4.7.5-umd-1.0-SNAPSHOT</fcrepo.version>
     <logback.version>1.1.7</logback.version>
     <pgsql.version>9.4.1211</pgsql.version>
     <spring.version>4.3.18.RELEASE</spring.version>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-module-auth-webac</artifactId>
-      <version>${fcrepo.version}</version>
+      <version>4.7.5</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>

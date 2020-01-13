@@ -14,7 +14,7 @@
   <packaging>war</packaging>
 
   <properties>
-    <fcrepo.version>4.7.5-umd-1.0-SNAPSHOT</fcrepo.version>
+    <fcrepo.version>4.7.5-umd-1.0</fcrepo.version>
     <logback.version>1.1.7</logback.version>
     <pgsql.version>9.4.1211</pgsql.version>
     <spring.version>4.3.18.RELEASE</spring.version>

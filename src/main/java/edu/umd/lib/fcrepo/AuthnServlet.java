@@ -1,8 +1,5 @@
 package edu.umd.lib.fcrepo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +17,14 @@ public class AuthnServlet extends HttpServlet {
     request.setAttribute("userName", request.getRemoteUser());
     request.setAttribute("repositoryRootPath", request.getContextPath() + "/rest");
 
-    // show a basic userinfo page
-    // taken from https://github.com/cas-projects/cas-sample-java-webapp/blob/master/src/main/webapp/index.jsp
-    request.getRequestDispatcher("/WEB-INF/jsp/userinfo.jsp").forward(request, response);
+    // check for a destination query parameter, and redirect there if one is found
+    // but only if it looks like a path (i.e., don't allow redirects to absolute URIs)
+    final String destination = request.getParameter("destination");
+    if (destination != null && destination.startsWith("/")) {
+      response.sendRedirect(destination);
+    } else {
+      // show a basic userinfo page
+      request.getRequestDispatcher("/WEB-INF/jsp/userinfo.jsp").forward(request, response);
+    }
   }
 }

@@ -69,7 +69,7 @@
 
   <error-page>
     <error-code>403</error-code>
-    <location>/errors/403.html</location>
+    <location>/errors/403.jsp</location>
   </error-page>
 
   <filter>

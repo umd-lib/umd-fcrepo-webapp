@@ -13,8 +13,12 @@
 
     <p><a href="${repositoryRootPath}">Fedora REST API Endpoint</a></p>
 
+    <form action="/user/token" method="get">
+      <p><label>Subject: <input name="subject"/></label> <button>Create token</button></p>
+    </form>
+
     <form action="/user/logout" method="post">
-      <button>Log out</button>
+      <p><button>Log out</button></p>
     </form>
   </body>
 </html>

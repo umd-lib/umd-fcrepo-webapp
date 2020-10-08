@@ -2,46 +2,36 @@
 
 This is a custom build of Fedora as a servlet-deployable web application.
 
-## Configuration
-
-The following configuration properties are available:
-
-
-### Spring configuration
-
-```
-fcrepo.spring.configuration=classpath:spring/configuration.xml
-```
-
-The Spring configuration is consolidated into a single file to make editing easier. The entire configuration can be externalized in order to manage that configuration separately, in which case, the value could be `file:/apps/fedora/config/spring.xml`.
-
-### Modeshape configuration
-
-```
-fcrepo.modeshape.configuration=file:/apps/fedora/config/repository.json
-```
-
-The modeshape configuration should be managed separately from the running servlet container. This value makes it possible.
-
-### ActiveMQ Configuration
-
-```
-fcrepo.activemq.configuration=file:/apps/fedora/config/activemq.xml
-```
-
-Likewise, the ActiveMQ configuration should be managed separately from the running servlet container.
-
-
 ## Building
 
-The web application can be built with Maven:
-
-```
-$ mvn clean package
+```bash
+mvn clean package
 ```
 
 The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target` directory.
 
+## Running with Cargo
+
+The application can also be run locally using the Maven Cargo plugin and `cargo:run` command.
+This requires the WAR file to be built using `mvn package` already.
+
+The [POM file](pom.xml) contains configuration suitable for running the application using
+the [umd-fcrepo-docker](https://github.com/umd-lib/umd-fcrepo-docker) stack to provide the
+backing services.
+
+You must also provide environment variables for the LDAP bind password and the Postgres
+database password:
+
+```bash
+mvn clean package
+export FCREPO_DB_PASSWORD=...      # default in the umd-fcrepo-docker stack is "fcrepo"
+export UMD_LDAP_BIND_PASSWORD=...  # see the SSDR "Identities" document for this
+mvn cargo:run
+```
+
+* <http://localhost:8080/> - Main splash page
+* <http://localhost:8080/rest> - REST API endpoint
+* <http://localhost:8080/user> - Login/user profile page
 
 ## Special Thanks
 

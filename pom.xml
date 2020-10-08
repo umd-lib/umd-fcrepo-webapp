@@ -8,7 +8,7 @@
 
   <groupId>edu.umd.lib</groupId>
   <artifactId>umd-fcrepo-webapp</artifactId>
-  <name>Fedora Repository Deployable Web Application</name>
+  <name>UMD Fedora Repository Deployable Web Application</name>
   <description>The Fedora web application</description>
   <version>2.5.0-SNAPSHOT</version>
   <packaging>war</packaging>
@@ -19,6 +19,8 @@
     <pgsql.version>9.4.1211</pgsql.version>
     <spring.version>4.3.18.RELEASE</spring.version>
     <jersey.version>2.24</jersey.version>
+    <java.cas.client.version>3.6.0</java.cas.client.version>
+    <warFileName>${project.artifactId}-${project.version}</warFileName>
   </properties>
 
   <distributionManagement>
@@ -33,6 +35,31 @@
       <url>https://maven.lib.umd.edu/nexus/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>nexus</id>
+      <name>Releases</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>nexus-snapshots</id>
+      <name>Snapshots</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -87,9 +114,28 @@
       <artifactId>spring-web</artifactId>
       <version>${spring.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-core</artifactId>
+      <version>${java.cas.client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.ldaptive</groupId>
+        <artifactId>ldaptive</artifactId>
+        <version>1.2.4</version>
+    </dependency>
   </dependencies>
 
   <build>
+    <finalName>${warFileName}</finalName>
+
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -118,6 +164,53 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.8.1</version>
+        <configuration>
+          <container>
+            <containerId>tomcat7x</containerId>
+            <!-- download zip url -->
+            <zipUrlInstaller>
+              <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.88/bin/apache-tomcat-7.0.88.zip</url>
+              <downloadDir>${project.build.directory}/downloads</downloadDir>
+              <extractDir>${project.build.directory}/extracts</extractDir>
+            </zipUrlInstaller>
+            <systemProperties>
+              <fcrepo.db.url>jdbc:postgresql://localhost:5432/fcrepo_modeshape5</fcrepo.db.url>
+              <fcrepo.db.driver>org.postgresql.Driver</fcrepo.db.driver>
+              <fcrepo.db.username>fcrepo</fcrepo.db.username>
+              <fcrepo.db.password>${env.FCREPO_DB_PASSWORD}</fcrepo.db.password>
+              <fcrepo.serverName>http://localhost:8080/</fcrepo.serverName>
+              <fcrepo.activemq.url>tcp://localhost:61616</fcrepo.activemq.url>
+              <umd.cas.serverURLPrefix>https://shib.idm.umd.edu/shibboleth-idp/profile/cas</umd.cas.serverURLPrefix>
+              <umd.ldap.url>ldap://directory.umd.edu</umd.ldap.url>
+              <umd.ldap.baseDN>ou=people,dc=umd,dc=edu</umd.ldap.baseDN>
+              <umd.ldap.bindDN>uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu</umd.ldap.bindDN>
+              <umd.ldap.bindPassword>${env.UMD_LDAP_BIND_PASSWORD}</umd.ldap.bindPassword>
+              <umd.ldap.memberAttribute>memberOf</umd.ldap.memberAttribute>
+              <umd.ldap.group.fedoraAdmin>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</umd.ldap.group.fedoraAdmin>
+              <umd.ldap.group.fedoraUser>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</umd.ldap.group.fedoraUser>
+            </systemProperties>
+          </container>
+          <configuration>
+            <properties>
+              <!-- Debug Mode On -->
+              <cargo.jvmargs>-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Xms512m -Xmx1024m -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC</cargo.jvmargs>
+              <!-- Debug Mode Off -->
+              <!--<cargo.jvmargs>-Xnoagent -Xms512m -Xmx1024m -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC</cargo.jvmargs>-->
+            </properties>
+          </configuration>
+          <deployables>
+            <deployable>
+              <properties>
+                <context>/</context>
+              </properties>
+            </deployable>
+          </deployables>
         </configuration>
       </plugin>
     </plugins>

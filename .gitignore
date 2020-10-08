@@ -1,1 +1,6 @@
 target
+
+# Eclipse metadata files
+.classpath
+.project
+.settings

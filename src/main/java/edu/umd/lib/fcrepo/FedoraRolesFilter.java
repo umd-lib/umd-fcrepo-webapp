@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.ldaptive.BindConnectionInitializer;
@@ -84,7 +85,8 @@ public class FedoraRolesFilter implements Filter {
       logger.info("User principal found in request: {}", principal);
       final String userName = principal.toString();
 
-      final String role = getRole(getUserEntry(userName));
+      final String role = getRole(httpRequest, userName);
+
       if (role != null) {
         logger.info("User {} has role {}", userName, role);
         // wrap the request so that it will answer "true" for the correct roles
@@ -105,13 +107,49 @@ public class FedoraRolesFilter implements Filter {
   }
 
   /**
+   * Returns the role for the user, or null if the role cannot be found.
+   * 
+   * Implementation: This method first checks the HttpRequest session for the
+   * role. If a role is not found in the session, it performs an LDAP search
+   * using the given userName. If a role is found, it is stored in the
+   * session and returned.
+   * 
+   * @param httpRequest the current HttpRequest object
+   * @param userName the login id of the user
+   * @return a role name string: "fedoraAdmin", "fedoraUser", or null
+   */
+  private String getRole(final HttpServletRequest httpRequest, final String userName) {
+    final String SESSION_ROLE_KEY = "fedoraUserRole";
+    
+    String role = null;
+    // Attempt to retrieve role from session
+    HttpSession session = httpRequest.getSession(false);
+    if ((session != null) && (session.getAttribute(SESSION_ROLE_KEY) != null)) {
+       role = session.getAttribute(SESSION_ROLE_KEY).toString();
+       logger.debug("User {} has role {} from session", userName, role);
+       return role;
+    }
+    
+    // Retrieve role from LDAP 
+    logger.debug("Attempting to retrieve role for {} from LDAP", userName);
+    role = getRoleFromLdap(getUserEntry(userName));
+    logger.debug("User {} has role {} from LDAP", userName, role);
+    
+    // Store role in session
+    if (role != null) {
+      session.setAttribute(SESSION_ROLE_KEY, role);
+    }
+    return role;
+  }
+
+  /**
    * Look up the given userName in the configured LDAP directory, and return the
    * matching entry (if found).
    *
    * @param userName this should match a single uid in the directory
    * @return matching entry or null
    */
-  LdapEntry getUserEntry(final String userName) {
+  private LdapEntry getUserEntry(final String userName) {
     try {
       final String uidFilter = "uid=" + userName;
       final SearchResult result = searchExecutor.search(cf, uidFilter, memberAttribute).getResult();
@@ -129,9 +167,9 @@ public class FedoraRolesFilter implements Filter {
    * If the userEntry is null, or has neither membership relation, return null.
    *
    * @param userEntry LDAP entry for a user
-   * @return role name string: "fedoraAdmin" or "fedoraUser"
+   * @return role name string: "fedoraAdmin", "fedoraUser", or null
    */
-  String getRole(final LdapEntry userEntry) {
+  private String getRoleFromLdap(final LdapEntry userEntry) {
     if (userEntry == null) {
       return null;
     }

@@ -25,6 +25,7 @@ import org.ldaptive.SearchExecutor;
 import org.ldaptive.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class FedoraRolesFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(FedoraRolesFilter.class);
@@ -43,28 +44,13 @@ public class FedoraRolesFilter implements Filter {
 
   private SearchExecutor searchExecutor;
 
+  private LdapRoleLookupService ldapRoleLookupService;
+
   @Override
   public void init(FilterConfig filterConfig) {
-    final String ldapURL = filterConfig.getInitParameter("ldapURL");
-    final String baseDN = filterConfig.getInitParameter("baseDN");
-    final String bindDN = filterConfig.getInitParameter("bindDN");
-    final String bindPassword = filterConfig.getInitParameter("bindPassword");
-
-    memberAttribute = filterConfig.getInitParameter("memberAttribute");
-    adminGroup = filterConfig.getInitParameter("adminGroup");
-    userGroup = filterConfig.getInitParameter("userGroup");
-
-    final ConnectionConfig connConfig = new ConnectionConfig(ldapURL);
-    connConfig.setUseStartTLS(true);
-    connConfig.setConnectionInitializer(new BindConnectionInitializer(bindDN, new Credential(bindPassword)));
-    cf = new DefaultConnectionFactory(connConfig);
-    searchExecutor = new SearchExecutor();
-    searchExecutor.setBaseDn(baseDN);
-
-    logger.info("Configured LDAP for user role lookup");
-    logger.info("LDAP URL: {} Base DN: {} Bind DN: {}", ldapURL, baseDN, bindDN);
-    logger.debug("Group {} => Role {}", adminGroup, ADMIN_ROLE);
-    logger.debug("Group {} => Role {}", userGroup, USER_ROLE);
+    ldapRoleLookupService = WebApplicationContextUtils
+        .getRequiredWebApplicationContext(filterConfig.getServletContext())
+        .getBean(LdapRoleLookupService.class);
   }
 
   /**
@@ -121,66 +107,23 @@ public class FedoraRolesFilter implements Filter {
   private String getRole(final HttpServletRequest httpRequest, final String userName) {
     final String SESSION_ROLE_KEY = "fedoraUserRole";
     
-    String role = null;
     // Attempt to retrieve role from session
-    HttpSession session = httpRequest.getSession(false);
+    final HttpSession session = httpRequest.getSession(false);
     if ((session != null) && (session.getAttribute(SESSION_ROLE_KEY) != null)) {
-       role = session.getAttribute(SESSION_ROLE_KEY).toString();
+       final String role = session.getAttribute(SESSION_ROLE_KEY).toString();
        logger.debug("User {} has role {} from session", userName, role);
        return role;
     }
     
     // Retrieve role from LDAP 
     logger.debug("Attempting to retrieve role for {} from LDAP", userName);
-    role = getRoleFromLdap(getUserEntry(userName));
+    final String role = ldapRoleLookupService.getRole(userName);
     logger.debug("User {} has role {} from LDAP", userName, role);
     
     // Store role in session
-    if (role != null) {
+    if (role != null && session != null) {
       session.setAttribute(SESSION_ROLE_KEY, role);
     }
     return role;
-  }
-
-  /**
-   * Look up the given userName in the configured LDAP directory, and return the
-   * matching entry (if found).
-   *
-   * @param userName this should match a single uid in the directory
-   * @return matching entry or null
-   */
-  private LdapEntry getUserEntry(final String userName) {
-    try {
-      final String uidFilter = "uid=" + userName;
-      final SearchResult result = searchExecutor.search(cf, uidFilter, memberAttribute).getResult();
-      return result.getEntry();
-    } catch (LdapException e) {
-      logger.error("LDAP Exception: " + e);
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * If the userEntry is a member of either the admin group or the user group,
-   * return the appropriate role string ("fedoraAdmin" or "fedoraUser", respectively).
-   * If the userEntry is null, or has neither membership relation, return null.
-   *
-   * @param userEntry LDAP entry for a user
-   * @return role name string: "fedoraAdmin", "fedoraUser", or null
-   */
-  private String getRoleFromLdap(final LdapEntry userEntry) {
-    if (userEntry == null) {
-      return null;
-    }
-
-    final LdapAttribute memberOfAttr = userEntry.getAttribute(memberAttribute);
-    final Collection<String> memberships = memberOfAttr.getStringValues();
-    if (memberships.contains(adminGroup)) {
-      return ADMIN_ROLE;
-    } else if (memberships.contains(userGroup)){
-      return USER_ROLE;
-    }
-    return null;
   }
 }

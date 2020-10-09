@@ -92,4 +92,15 @@
   <task:executor id="taskExecutor" pool-size="1" />
   <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler" />
 
+  <!-- UMD AuthNZ config -->
+  <bean name="ldapLookupService" class="edu.umd.lib.fcrepo.LdapRoleLookupService">
+    <property name="ldapURL" value="${umd.ldap.url}"/>
+    <property name="bindDN" value="${umd.ldap.bindDN}"/>
+    <property name="bindPassword" value="${umd.ldap.bindPassword}"/>
+    <property name="baseDN" value="${umd.ldap.baseDN}"/>
+    <property name="memberAttribute" value="${umd.ldap.memberAttribute}"/>
+    <property name="adminGroup" value="${umd.ldap.group.fedoraAdmin}"/>
+    <property name="userGroup" value="${umd.ldap.group.fedoraUser}"/>
+  </bean>
+
 </beans>

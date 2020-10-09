@@ -144,6 +144,19 @@
   </filter-mapping>
 
   <filter>
+    <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
+    <filter-class>edu.umd.lib.fcrepo.TokenAuthnzFilter</filter-class>
+    <init-param>
+      <param-name>secret</param-name>
+      <param-value>${umd.jwt.secret}</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
     <filter-name>Fedora Roles Filter</filter-name>
     <filter-class>edu.umd.lib.fcrepo.FedoraRolesFilter</filter-class>
     <init-param>

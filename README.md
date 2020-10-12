@@ -19,13 +19,14 @@ The [POM file](pom.xml) contains configuration suitable for running the applicat
 the [umd-fcrepo-docker](https://github.com/umd-lib/umd-fcrepo-docker) stack to provide the
 backing services.
 
-You must also provide environment variables for the LDAP bind password and the Postgres
-database password:
+You must also provide environment variables for the LDAP bind password, Postgres
+database password, and JWT secret:
 
 ```bash
 mvn clean package
 export FCREPO_DB_PASSWORD=...      # default in the umd-fcrepo-docker stack is "fcrepo"
 export UMD_LDAP_BIND_PASSWORD=...  # see the SSDR "Identities" document for this
+export UMD_JWT_SECRET=foobarbazquuzbazolazteschooglefooglebooglezorkgork # Can be anything, but must be sufficiently long.
 mvn cargo:run
 ```
 

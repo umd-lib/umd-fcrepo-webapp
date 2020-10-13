@@ -34,6 +34,8 @@ mvn cargo:run
 * <http://localhost:8080/rest> - REST API endpoint
 * <http://localhost:8080/user> - Login/user profile page
 
+The IpMapperFilter, which determines access rights to resources, uses the "src/test/resources/test-ip-mapping.properties" file by default, which does not provide any access rights for the "localhost" user. This can be modified by adding the localhost address ("127.0.0.1/32") to a category in the "test-ip-mapping.properties" file, or by specifying a different file in the "pom.xml" file. 
+
 ## Special Thanks
 
 This repository is based on the [Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.

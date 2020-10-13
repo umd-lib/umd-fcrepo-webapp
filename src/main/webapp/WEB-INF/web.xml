@@ -41,6 +41,15 @@
     <servlet-name>logout-servlet</servlet-name>
     <servlet-class>edu.umd.lib.fcrepo.LogoutServlet</servlet-class>
   </servlet>
+
+  <servlet>
+    <servlet-name>token-servlet</servlet-name>
+    <servlet-class>edu.umd.lib.fcrepo.GenerateTokenServlet</servlet-class>
+    <init-param>
+      <param-name>secret</param-name>
+      <param-value>${umd.jwt.secret}</param-value>
+    </init-param>
+  </servlet>
   
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
@@ -55,6 +64,11 @@
   <servlet-mapping>
     <servlet-name>logout-servlet</servlet-name>
     <url-pattern>/user/logout</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>token-servlet</servlet-name>
+    <url-pattern>/user/token</url-pattern>
   </servlet-mapping>
 
   <filter>
@@ -126,6 +140,19 @@
   </filter>
   <filter-mapping>
     <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
+    <filter-class>edu.umd.lib.fcrepo.TokenAuthnzFilter</filter-class>
+    <init-param>
+      <param-name>secret</param-name>
+      <param-value>${umd.jwt.secret}</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 

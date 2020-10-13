@@ -21,6 +21,7 @@
     <jersey.version>2.24</jersey.version>
     <java.cas.client.version>3.6.0</java.cas.client.version>
     <warFileName>${project.artifactId}-${project.version}</warFileName>
+    <jwt.version>0.11.2</jwt.version>
   </properties>
 
   <distributionManagement>
@@ -131,6 +132,34 @@
         <artifactId>ldaptive</artifactId>
         <version>1.2.4</version>
     </dependency>
+
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>${jwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>${jwt.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+      <version>${jwt.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Uncomment this next dependency if you are using JDK 10 or earlier and you also want to use
+         RSASSA-PSS (PS256, PS384, PS512) algorithms.  JDK 11 or later does not require it for those algorithms:
+    <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <version>1.60</version>
+        <scope>runtime</scope>
+    </dependency>
+    -->
   </dependencies>
 
   <build>
@@ -187,6 +216,7 @@
               <fcrepo.serverName>http://localhost:8080/</fcrepo.serverName>
               <fcrepo.activemq.url>tcp://localhost:61616</fcrepo.activemq.url>
               <umd.cas.serverURLPrefix>https://shib.idm.umd.edu/shibboleth-idp/profile/cas</umd.cas.serverURLPrefix>
+              <umd.jwt.secret>${env.UMD_JWT_SECRET}</umd.jwt.secret>
               <umd.ldap.url>ldap://directory.umd.edu</umd.ldap.url>
               <umd.ldap.baseDN>ou=people,dc=umd,dc=edu</umd.ldap.baseDN>
               <umd.ldap.bindDN>uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu</umd.ldap.bindDN>

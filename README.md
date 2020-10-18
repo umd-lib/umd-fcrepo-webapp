@@ -24,9 +24,9 @@ database password, and JWT secret:
 
 ```bash
 mvn clean package
-export FCREPO_DB_PASSWORD=...      # default in the umd-fcrepo-docker stack is "fcrepo"
-export UMD_LDAP_BIND_PASSWORD=...  # see the SSDR "Identities" document for this
-export UMD_JWT_SECRET=foobarbazquuzbazolazteschooglefooglebooglezorkgork # Can be anything, but must be sufficiently long.
+export MODESHAPE_DB_PASSWORD=...      # default in the umd-fcrepo-docker stack is "fcrepo"
+export LDAP_BIND_PASSWORD=...         # see the SSDR "Identities" document for this
+export JWT_SECRET=...                 # Can be anything, but must be sufficiently long
 mvn cargo:run
 ```
 

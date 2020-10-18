@@ -10,10 +10,6 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>WEB-INF/classes/spring/repository.xml</param-value>
   </context-param>
-  <context-param>
-    <param-name>casServerUrlPrefix</param-name>
-    <param-value>${umd.cas.serverURLPrefix}</param-value>
-  </context-param>
 
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -45,10 +41,6 @@
   <servlet>
     <servlet-name>token-servlet</servlet-name>
     <servlet-class>edu.umd.lib.fcrepo.GenerateTokenServlet</servlet-class>
-    <init-param>
-      <param-name>secret</param-name>
-      <param-value>${umd.jwt.secret}</param-value>
-    </init-param>
   </servlet>
   
   <servlet-mapping>
@@ -95,20 +87,13 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <!-- using the Spring DelegatingFilterProxy allows us to configure the filters using environment variables -->
   <filter>
     <filter-name>CAS Authentication Filter</filter-name>
-    <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <init-param>
-      <param-name>casServerLoginUrl</param-name>
-      <param-value>${umd.cas.serverURLPrefix}/login</param-value>
-    </init-param>
-    <init-param>
-      <param-name>serverName</param-name>
-      <param-value>${fcrepo.serverName}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ignorePattern</param-name>
-      <param-value>logout</param-value>
+      <param-name>targetBeanName</param-name>
+      <param-value>casAuthenticationFilter</param-value>
     </init-param>
   </filter>
   <!-- only redirect to login for unauthenticated users in the /user URL space -->
@@ -119,14 +104,10 @@
 
   <filter>
     <filter-name>CAS Validation Filter</filter-name>
-    <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <init-param>
-      <param-name>casServerUrlPrefix</param-name>
-      <param-value>${umd.cas.serverURLPrefix}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>serverName</param-name>
-      <param-value>${fcrepo.serverName}</param-value>
+      <param-name>targetBeanName</param-name>
+      <param-value>casValidationFilter</param-value>
     </init-param>
   </filter>
   <filter-mapping>
@@ -146,10 +127,6 @@
   <filter>
     <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
     <filter-class>edu.umd.lib.fcrepo.TokenAuthnzFilter</filter-class>
-    <init-param>
-      <param-name>secret</param-name>
-      <param-value>${umd.jwt.secret}</param-value>
-    </init-param>
   </filter>
   <filter-mapping>
     <filter-name>JWT Bearer Token AuthNZ Filter</filter-name>
@@ -159,36 +136,7 @@
   <filter>
     <filter-name>Fedora Roles Filter</filter-name>
     <filter-class>edu.umd.lib.fcrepo.FedoraRolesFilter</filter-class>
-    <init-param>
-      <param-name>ldapURL</param-name>
-      <param-value>${umd.ldap.url}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>baseDN</param-name>
-      <param-value>${umd.ldap.baseDN}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>bindDN</param-name>
-      <param-value>${umd.ldap.bindDN}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>bindPassword</param-name>
-      <param-value>${umd.ldap.bindPassword}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>memberAttribute</param-name>
-      <param-value>${umd.ldap.memberAttribute}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>adminGroup</param-name>
-      <param-value>${umd.ldap.group.fedoraAdmin}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>userGroup</param-name>
-      <param-value>${umd.ldap.group.fedoraUser}</param-value>
-    </init-param>
   </filter>
-
   <!-- look up user role on any request to the /user or /rest URL spaces -->
   <!-- we can omit the /static and / (root) spaces, since those are not access-restricted -->
   <filter-mapping>
@@ -199,14 +147,10 @@
   
   <filter>
     <filter-name>Fedora IP Mapper Filter</filter-name>
-    <filter-class>edu.umd.lib.fcrepo.IpMapperFilter</filter-class>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <init-param>
-      <param-name>headerName</param-name>
-      <param-value>X-Auth-IP-Mapper</param-value>
-    </init-param>
-    <init-param>
-      <param-name>mappingFile</param-name>
-      <param-value>${umd.fcrepo.ip-mapping.file}</param-value>
+      <param-name>targetBeanName</param-name>
+      <param-value>ipMapperFilter</param-value>
     </init-param>
   </filter>
   <!-- Map user's IP address to allowed categories on any request to the /user or /rest URL spaces -->

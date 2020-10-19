@@ -4,13 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
 import java.security.Principal;
-import java.util.Base64;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
@@ -35,12 +33,10 @@ public class TokenAuthnzFilter implements Filter {
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
-    final String secret = filterConfig.getInitParameter("secret");
-    key = new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS256.getJcaName());
-
-    ldapRoleLookupService = WebApplicationContextUtils
-        .getRequiredWebApplicationContext(filterConfig.getServletContext())
-        .getBean(LdapRoleLookupService.class);
+    final WebApplicationContext context = WebApplicationContextUtils
+        .getRequiredWebApplicationContext(filterConfig.getServletContext());
+    key = context.getBean(SecretKeyService.class).getSecretKey();
+    ldapRoleLookupService = context.getBean(LdapRoleLookupService.class);
   }
 
   @Override

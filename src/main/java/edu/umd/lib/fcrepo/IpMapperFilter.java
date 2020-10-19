@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,12 +34,55 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher;
  * in one or more of these categories, the filter inserts a header, which can
  * then be read by other applications to determine access rights.
  *
- * The properties file should follow the following format:
+ * <p>The properties file should follow the following format:
  *
+ * <pre>
  * categoryName=0.0.0.0/32,0.0.0.0/16
+ * </pre>
  *
- * The header value will be a comma-separated list of all of the categories
- * where the user's IP address matched the cateogory's IP address(es).
+ * <p>The header value will be a comma-separated list of all of the categories
+ * where the user's IP address matched the category's IP address(es).</p>
+ *
+ * <p>This filter can either be configured directly in a web.xml file, or
+ * indirectly by using an org.springframework.web.filter.DelegatingFilterProxy
+ * and a corresponding bean in your Spring configuration.</p>
+ *
+ * <p>Direct configuration:</p>
+ *
+ * <pre>
+ * &lt;filter>
+ *   &lt;filter-name>ip-mapper-filter&lt;/filter-name>
+ *   &lt;filter-class>edu.umd.lib.fcrepo.IpMapperFilter&lt;/filter-class>
+ *   &lt;init-param>
+ *     &lt;param-name>headerName&lt;/param-name>
+ *     &lt;param-value>Some-Header-Name&lt;/param-value>
+ *   &lt;/init-param>
+ *   &lt;init-param>
+ *     &lt;param-name>mappingFile&lt;/param-name>
+ *     &lt;param-value>/path/to/ip-mapping.properties&lt;/param-value>
+ *   &lt;/init-param>
+ * &lt;/filter>
+ * </pre>
+ *
+ * <p>Via a DelegatingFilterProxy:</p>
+ *
+ * <pre>
+ * &lt;!-- web.xml -->
+ * &lt;filter>
+ *   &lt;filter-name>ip-mapper-filter&lt;/filter-name>
+ *   &lt;filter-class>org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class>
+ *   &lt;init-param>
+ *     &lt;param-name>targetBean&lt;/param-name>
+ *     &lt;param-value>ipMapperFilter&lt;/param-value>
+ *   &lt;/init-param>
+ * &lt;/filter>
+ *
+ * &lt;!-- Spring XML -->
+ * &lt;bean id="ipMapperFilter" class="edu.umd.lib.fcrepo.IpMapperFilter">
+ *   &lt;property name="headerName" value="Some-Header-Name"/>
+ *   &lt;property name="mappingFile" value="/path/to/ip-mapping.properties"/>
+ * &lt;/bean>
+ * </pre>
  */
 public class IpMapperFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(IpMapperFilter.class);
@@ -46,13 +90,36 @@ public class IpMapperFilter implements Filter {
   /**
    * The header name we want to check for.
    */
-  private String headerName = null;
+  private String headerName;
 
   /**
-   * List of IpAdressMatcher objects (representing allowed IP ranges in a category),
+   * Name of the properties file containing the mappings.
+   */
+  private String mappingFile;
+
+  /**
+   * List of IpAddressMatcher objects (representing allowed IP ranges in a category),
    * indexed by category
    */
   private Map<String, List<IpAddressMatcher>> ipCategories = new HashMap<>();
+
+  public IpMapperFilter() {}
+
+  @PostConstruct
+  public void initializeMapping() throws ServletException {
+    // Retrieve list of Properties from the mapping file
+    Properties mappingProperties = new Properties();
+    try (FileReader in = new FileReader(mappingFile)) {
+      mappingProperties.load(in);
+    } catch (IOException ioe) {
+      logger.error("An I/O exception occurred reading the mapping file at: '" + mappingFile + "'", ioe);
+      throw new ServletException("An I/O exception occurred reading the mapping file at: '" + mappingFile + "'",
+          ioe);
+    }
+
+    // Convert mapping properties into map of IP categories
+    ipCategories = initIpCategories(mappingProperties);
+  }
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -62,24 +129,13 @@ public class IpMapperFilter implements Filter {
       throw new ServletException("'headerName' parameter has not been set.");
     }
 
-    String mappingFileName = filterConfig.getInitParameter("mappingFile");
-    if (mappingFileName == null) {
+    mappingFile = filterConfig.getInitParameter("mappingFile");
+    if (mappingFile == null) {
       logger.error("The 'mappingFile' parameter has not been specified.");
       throw new ServletException("The 'mappingFile' parameter has not been specified.");
     }
 
-    // Retrieve list of Properties from the mapping file
-    Properties mappingProperties = new Properties();
-    try (FileReader in = new FileReader(mappingFileName)) {
-      mappingProperties.load(in);
-    } catch (IOException ioe) {
-      logger.error("An I/O exception occurred reading the mapping file at: '" + mappingFileName + "'", ioe);
-      throw new ServletException("An I/O exception occurred reading the mapping file at: '" + mappingFileName + "'",
-          ioe);
-    }
-
-    // Convert mapping properties into map of IP categories
-    ipCategories = initIpCategories(mappingProperties);
+    initializeMapping();
   }
 
   /**
@@ -95,16 +151,16 @@ public class IpMapperFilter implements Filter {
     Map<String, List<IpAddressMatcher>> allowedIps = new HashMap<>();
 
     // Initialize allowed IP ranges map
-    Set<Object> keys = mappingProperties.keySet();
-    for (Object key : keys) {
-      String keyStr = (String) key;
-      String value = mappingProperties.getProperty(keyStr);
+    final Set<Object> keys = mappingProperties.keySet();
+    for (final Object key : keys) {
+      final String keyStr = (String) key;
+      final String value = mappingProperties.getProperty(keyStr);
 
-      String[] subnets = value.split(",");
-      List<IpAddressMatcher> subnetsList = new ArrayList<>();
-      for (String subnet : subnets) {
+      final String[] subnets = value.split(",");
+      final List<IpAddressMatcher> subnetsList = new ArrayList<>();
+      for (final String subnet : subnets) {
         try {
-          IpAddressMatcher ipAddressMatcher = new IpAddressMatcher(subnet);
+          final IpAddressMatcher ipAddressMatcher = new IpAddressMatcher(subnet);
           subnetsList.add(ipAddressMatcher);
         } catch (IllegalArgumentException iae) {
           logger.warn("Could not parse '" + subnet + "' value in '" + key + "' property", iae);
@@ -132,17 +188,17 @@ public class IpMapperFilter implements Filter {
   public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
 
-    HeaderRequestWrapper request = new HeaderRequestWrapper((HttpServletRequest) servletRequest);
+    final HeaderRequestWrapper request = new HeaderRequestWrapper((HttpServletRequest) servletRequest);
 
     // Check for existing header. This is necessary to prevent spoofing.
     // If the header already exists, strip and reevaluate.
-    String existingHeader = request.getHeader(headerName);
+    final String existingHeader = request.getHeader(headerName);
     if (existingHeader != null) {
       logger.warn("Header: '" + existingHeader + "' found before IP mapper eval!");
       request.removeHeader(headerName);
     }
 
-    String userIp = getUserIp(request);
+    final String userIp = getUserIp(request);
 
     if (userIp == null) {
       logger.debug("Could not find valid IP address for user. Skipping IP mapping.");
@@ -150,7 +206,7 @@ public class IpMapperFilter implements Filter {
       return;
     }
 
-    List<String> matchingCategories = findMatchingCategories(userIp);
+    final List<String> matchingCategories = findMatchingCategories(userIp);
 
     if (!matchingCategories.isEmpty()) {
       final String headerValue = StringUtils.join(matchingCategories, ",");
@@ -183,9 +239,9 @@ public class IpMapperFilter implements Filter {
     }
 
     // Find matching categories, if any
-    for (String key : ipCategories.keySet()) {
-      List<IpAddressMatcher> subnets = ipCategories.get(key);
-      for (IpAddressMatcher subnet : subnets) {
+    for (final String key : ipCategories.keySet()) {
+      final List<IpAddressMatcher> subnets = ipCategories.get(key);
+      for (final IpAddressMatcher subnet : subnets) {
         if (subnet.matches(userIp)) {
           matchingCategories.add(key);
         }
@@ -227,6 +283,22 @@ public class IpMapperFilter implements Filter {
     }
     return null;
   }
+
+  public String getHeaderName() {
+    return headerName;
+  }
+
+  public void setHeaderName(String headerName) {
+    this.headerName = headerName;
+  }
+
+  public String getMappingFile() {
+    return mappingFile;
+  }
+
+  public void setMappingFile(String mappingFile) {
+    this.mappingFile = mappingFile;
+  }
 }
 
 /**
@@ -236,7 +308,7 @@ class HeaderRequestWrapper extends HttpServletRequestWrapper {
   /**
    * A Map of headers for the request
    */
-  private Map<String, String> headers = new HashMap<>();
+  private final Map<String, String> headers = new HashMap<>();
 
   /**
    * Wraps the given HttpServletRequest

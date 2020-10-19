@@ -10,10 +10,10 @@
     "storage" : {
         "persistence": {
             "type" : "db",
-            "connectionUrl": "${fcrepo.db.url}",
-            "driver" : "${fcrepo.db.driver}",
-            "username" : "${fcrepo.db.username}",
-            "password" : "${fcrepo.db.password}"
+            "connectionUrl": "${MODESHAPE_DB_URL}",
+            "driver" : "${MODESHAPE_DB_DRIVER}",
+            "username" : "${MODESHAPE_DB_USERNAME}",
+            "password" : "${MODESHAPE_DB_PASSWORD}"
         },
         "binaryStorage" : {
             "type" : "file",

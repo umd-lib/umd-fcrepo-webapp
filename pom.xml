@@ -229,22 +229,19 @@
               <extractDir>${project.build.directory}/extracts</extractDir>
             </zipUrlInstaller>
             <systemProperties>
-              <fcrepo.db.url>jdbc:postgresql://localhost:5432/fcrepo_modeshape5</fcrepo.db.url>
-              <fcrepo.db.driver>org.postgresql.Driver</fcrepo.db.driver>
-              <fcrepo.db.username>fcrepo</fcrepo.db.username>
-              <fcrepo.db.password>${env.FCREPO_DB_PASSWORD}</fcrepo.db.password>
-              <fcrepo.serverName>http://localhost:8080/</fcrepo.serverName>
-              <fcrepo.activemq.url>tcp://localhost:61616</fcrepo.activemq.url>
-              <umd.cas.serverURLPrefix>https://shib.idm.umd.edu/shibboleth-idp/profile/cas</umd.cas.serverURLPrefix>
-              <umd.jwt.secret>${env.UMD_JWT_SECRET}</umd.jwt.secret>
-              <umd.ldap.url>ldap://directory.umd.edu</umd.ldap.url>
-              <umd.ldap.baseDN>ou=people,dc=umd,dc=edu</umd.ldap.baseDN>
-              <umd.ldap.bindDN>uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu</umd.ldap.bindDN>
-              <umd.ldap.bindPassword>${env.UMD_LDAP_BIND_PASSWORD}</umd.ldap.bindPassword>
-              <umd.ldap.memberAttribute>memberOf</umd.ldap.memberAttribute>
-              <umd.ldap.group.fedoraAdmin>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</umd.ldap.group.fedoraAdmin>
-              <umd.ldap.group.fedoraUser>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</umd.ldap.group.fedoraUser>
-              <umd.fcrepo.ip-mapping.file>conf/test-ip-mapping.properties</umd.fcrepo.ip-mapping.file>
+              <MODESHAPE_DB_URL>jdbc:postgresql://localhost:5432/fcrepo_modeshape5</MODESHAPE_DB_URL>
+              <MODESHAPE_DB_DRIVER>org.postgresql.Driver</MODESHAPE_DB_DRIVER>
+              <MODESHAPE_DB_USERNAME>fcrepo</MODESHAPE_DB_USERNAME>
+              <FCREPO_BASE_URL>http://localhost:8080/</FCREPO_BASE_URL>
+              <ACTIVEMQ_URL>tcp://localhost:61616</ACTIVEMQ_URL>
+              <CAS_URL_PREFIX>https://shib.idm.umd.edu/shibboleth-idp/profile/cas</CAS_URL_PREFIX>
+              <LDAP_URL>ldap://directory.umd.edu</LDAP_URL>
+              <LDAP_BASE_DN>ou=people,dc=umd,dc=edu</LDAP_BASE_DN>
+              <LDAP_BIND_DN>uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu</LDAP_BIND_DN>
+              <LDAP_MEMBER_ATTRIBUTE>memberOf</LDAP_MEMBER_ATTRIBUTE>
+              <LDAP_ADMIN_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_ADMIN_GROUP>
+              <LDAP_USER_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_USER_GROUP>
+              <IP_MAPPING_FILE>conf/test-ip-mapping.properties</IP_MAPPING_FILE>
             </systemProperties>
           </container>
           <configuration>

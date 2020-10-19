@@ -68,7 +68,7 @@
   </bean>
 
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="${fcrepo.activemq.url:tcp://localhost:61616}"/>
+    <property name="brokerURL" value="${ACTIVEMQ_URL}"/>
   </bean>
 
   <!-- translates events into JMS header-only format-->
@@ -94,13 +94,37 @@
 
   <!-- UMD AuthNZ config -->
   <bean name="ldapLookupService" class="edu.umd.lib.fcrepo.LdapRoleLookupService">
-    <property name="ldapURL" value="${umd.ldap.url}"/>
-    <property name="bindDN" value="${umd.ldap.bindDN}"/>
-    <property name="bindPassword" value="${umd.ldap.bindPassword}"/>
-    <property name="baseDN" value="${umd.ldap.baseDN}"/>
-    <property name="memberAttribute" value="${umd.ldap.memberAttribute}"/>
-    <property name="adminGroup" value="${umd.ldap.group.fedoraAdmin}"/>
-    <property name="userGroup" value="${umd.ldap.group.fedoraUser}"/>
+    <property name="ldapURL" value="${LDAP_URL}"/>
+    <property name="bindDN" value="${LDAP_BIND_DN}"/>
+    <property name="bindPassword" value="${LDAP_BIND_PASSWORD}"/>
+    <property name="baseDN" value="${LDAP_BASE_DN}"/>
+    <property name="memberAttribute" value="${LDAP_MEMBER_ATTRIBUTE}"/>
+    <property name="adminGroup" value="${LDAP_ADMIN_GROUP}"/>
+    <property name="userGroup" value="${LDAP_USER_GROUP}"/>
   </bean>
 
+  <bean name="secretKeyService" class="edu.umd.lib.fcrepo.SecretKeyService">
+    <property name="secret" value="${JWT_SECRET}"/>
+  </bean>
+
+  <bean name="casService" class="edu.umd.lib.fcrepo.CasService">
+    <property name="casUrlPrefix" value="${CAS_URL_PREFIX}"/>
+  </bean>
+
+  <bean name="casAuthenticationFilter" class="org.jasig.cas.client.authentication.AuthenticationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}" />
+    <property name="casServerLoginUrl" value="${CAS_URL_PREFIX}/login"/>
+  </bean>
+  <bean name="casValidationFilter" class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}"/>
+    <property name="ticketValidator">
+      <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+        <constructor-arg index="0" value="${CAS_URL_PREFIX}" />
+      </bean>
+    </property>
+  </bean>
+  <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.IpMapperFilter">
+    <property name="headerName" value="X-Auth-IP-Mapper"/>
+    <property name="mappingFile" value="${IP_MAPPING_FILE}"/>
+  </bean>
 </beans>

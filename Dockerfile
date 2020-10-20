@@ -1,3 +1,10 @@
+# Dockerfile for the generating the webapp image
+#
+# To build:
+#
+# docker build -t docker.lib.umd.edu/fcrepo-webapp:<VERSION> -f Dockerfile .
+#
+# where <VERSION> is the Docker image version to create.
 FROM maven:3.6.3-jdk-8-slim AS compile
 
 ENV SOURCE_DIR /opt/umd-fcrepo-webapp

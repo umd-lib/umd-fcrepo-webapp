@@ -1,6 +1,5 @@
 package edu.umd.lib.fcrepo;
 
-import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -12,43 +11,43 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Key;
 import java.util.Date;
 
+import static edu.umd.lib.fcrepo.LdapRoleLookupService.ADMIN_ROLE;
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 
 public class GenerateTokenServlet extends HttpServlet {
   private static final Logger logger = LoggerFactory.getLogger(GenerateTokenServlet.class);
 
-  private Key key;
+  private AuthTokenService keyService;
 
   @Override
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
     final WebApplicationContext context = WebApplicationContextUtils
         .getRequiredWebApplicationContext(config.getServletContext());
-    key = context.getBean(SecretKeyService.class).getSecretKey();
+    keyService = context.getBean(AuthTokenService.class);
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    final String subject = req.getParameter("subject");
-    final String userName = req.getRemoteUser();
-    final Date expiry = Date.from(now().plus(365, DAYS));
+    if (!req.isUserInRole(ADMIN_ROLE)) {
+      // only admins may create tokens
+      resp.setStatus(SC_FORBIDDEN);
+      resp.setContentType("text/plain");
+      resp.getWriter().println("Only admins may create tokens");
+    } else {
+      final String subject = req.getParameter("subject");
+      final String role = req.getParameter("role");
+      final String requestingUser = req.getRemoteUser();
+      final Date oneYearHence = Date.from(now().plus(365, DAYS));
 
-    logger.info("Creating token with subject: {}", subject);
-    logger.info("Issuer will be the requesting user: {}", userName);
-    logger.info("Expiration date: {}", expiry);
+      final String jws = keyService.createToken(subject, requestingUser, oneYearHence, role);
 
-    final String jws = Jwts.builder()
-        .setSubject(subject)
-        .setIssuer(userName)
-        .setExpiration(expiry)
-        .signWith(key)
-        .compact();
-
-    resp.setContentType("text/plain");
-    resp.getWriter().println(jws);
+      resp.setContentType("text/plain");
+      resp.getWriter().println(jws);
+    }
   }
 }

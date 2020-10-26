@@ -35,7 +35,7 @@ public class TokenAuthnzFilter implements Filter {
   public void init(FilterConfig filterConfig) throws ServletException {
     final WebApplicationContext context = WebApplicationContextUtils
         .getRequiredWebApplicationContext(filterConfig.getServletContext());
-    key = context.getBean(SecretKeyService.class).getSecretKey();
+    key = context.getBean(AuthTokenService.class).getSecretKey();
     ldapRoleLookupService = context.getBean(LdapRoleLookupService.class);
   }
 
@@ -45,7 +45,7 @@ public class TokenAuthnzFilter implements Filter {
 
     final String authorizationHeader = httpRequest.getHeader("Authorization");
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
-      String tokenString = authorizationHeader.substring(authorizationHeader.indexOf(" ") + 1);
+      final String tokenString = authorizationHeader.trim().substring(authorizationHeader.indexOf(" ") + 1);
       logger.info("Bearer token: '{}'", tokenString);
       try {
         final Jws<Claims> jws = Jwts.parserBuilder()
@@ -57,13 +57,10 @@ public class TokenAuthnzFilter implements Filter {
         final Claims tokenBody = jws.getBody();
         final String subject = tokenBody.getSubject();
         logger.info("Token subject is {}", subject);
-        final String issuer = tokenBody.getIssuer();
-        logger.info("Token created by {}", issuer);
-        final String issuerRole = ldapRoleLookupService.getRole(issuer);
-        logger.info("Token creator has role {}", issuerRole);
         logger.info("Token expires on {}", tokenBody.getExpiration());
+        final String tokenRole = determineRole(tokenBody);
         final Principal userPrincipal = new AttributePrincipalImpl(subject);
-        final HttpServletRequest newRequest = requestWithUserAndRole(httpRequest, userPrincipal, issuerRole);
+        final HttpServletRequest newRequest = requestWithUserAndRole(httpRequest, userPrincipal, tokenRole);
         logger.debug("Request remote user: {}", newRequest.getRemoteUser());
         logger.debug("Request user principal: {}", newRequest.getUserPrincipal());
         logger.debug("Request user is admin? {}", newRequest.isUserInRole("fedoraAdmin"));
@@ -90,5 +87,17 @@ public class TokenAuthnzFilter implements Filter {
 
   private HttpServletRequest requestWithUserAndRole(HttpServletRequest request, Principal userPrincipal, String role) {
     return new ProvideRoleRequestWrapper(new ProvideUserPrincipalRequestWrapper(request, userPrincipal), role);
+  }
+
+  private String determineRole(final Claims tokenBody) {
+    final String issuer = tokenBody.getIssuer();
+    logger.info("Token created by {}", issuer);
+    final String issuerRole = ldapRoleLookupService.getRole(issuer);
+    logger.info("Token creator has role {}", issuerRole);
+    if (tokenBody.containsKey("role")) {
+      return tokenBody.get("role", String.class);
+    } else {
+      return issuerRole;
+    }
   }
 }

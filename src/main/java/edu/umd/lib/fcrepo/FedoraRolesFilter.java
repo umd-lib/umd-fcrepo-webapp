@@ -30,10 +30,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class FedoraRolesFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(FedoraRolesFilter.class);
 
-  public static final String ADMIN_ROLE = "fedoraAdmin";
-
-  public static final String USER_ROLE = "fedoraUser";
-
   private ConnectionFactory cf;
 
   private String memberAttribute;

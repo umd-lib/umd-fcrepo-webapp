@@ -47,7 +47,7 @@ be modified by adding the localhost address (`127.0.0.1/32`) to a category in th
 This repository contains a Dockerfile for creating the image to use with the [umd-fcrepo-docker] stack:
 
 ```bash
-docker build -t docker.lib.umd.edu/umd-fcrepo-webapp .
+docker build -t docker.lib.umd.edu/fcrepo-webapp .
 ```
 
 ## Configuration

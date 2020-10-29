@@ -13,7 +13,15 @@ COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR
 RUN mvn package -DwarFileName=umd-fcrepo-webapp
 
-FROM tomcat:7.0.106-jdk8-openjdk-buster
+# Note: Pinning the tomcat image to this precise image hash, because it uses
+# OpenJDK v8u265. A later version of this image uses OpenJDK v8u272, which
+# has an LDAP issue similar to https://bugs.openjdk.java.net/browse/JDK-8214440
+# This sha256 was recovered from the UMD Nexus by examining the "manifests"
+# folder for the "tomcat" image and examining the "last_modified" dates of
+# when they were downloaded.
+#
+# See LIBFCREPO-903 for more information and a tester program.
+FROM tomcat:7.0.106-jdk8-openjdk-buster@sha256:7389e901db3b2f9bb0268ce4cbd2ec2e1010db1ef43e04c49a64d96b156d0022
 
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /usr/local/tomcat/webapps/ROOT.war
 COPY setenv.sh /usr/local/tomcat/bin/

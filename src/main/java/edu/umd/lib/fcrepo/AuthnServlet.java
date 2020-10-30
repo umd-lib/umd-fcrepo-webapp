@@ -6,13 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static edu.umd.lib.fcrepo.LdapRoleLookupService.ADMIN_ROLE;
+import static edu.umd.lib.fcrepo.LdapRoleLookupService.USER_ROLE;
+
 public class AuthnServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    if (request.isUserInRole(FedoraRolesFilter.ADMIN_ROLE)) {
-      request.setAttribute("userRole", FedoraRolesFilter.ADMIN_ROLE);
-    } else if (request.isUserInRole(FedoraRolesFilter.USER_ROLE)) {
-      request.setAttribute("userRole", FedoraRolesFilter.USER_ROLE);
+    if (request.isUserInRole(ADMIN_ROLE)) {
+      request.setAttribute("userRole", ADMIN_ROLE);
+    } else if (request.isUserInRole(USER_ROLE)) {
+      request.setAttribute("userRole", USER_ROLE);
     }
     request.setAttribute("userName", request.getRemoteUser());
     request.setAttribute("repositoryRootPath", request.getContextPath() + "/rest");

@@ -103,7 +103,7 @@
     <property name="userGroup" value="${LDAP_USER_GROUP}"/>
   </bean>
 
-  <bean name="secretKeyService" class="edu.umd.lib.fcrepo.SecretKeyService">
+  <bean name="authTokenService" class="edu.umd.lib.fcrepo.AuthTokenService">
     <property name="secret" value="${JWT_SECRET}"/>
   </bean>
 

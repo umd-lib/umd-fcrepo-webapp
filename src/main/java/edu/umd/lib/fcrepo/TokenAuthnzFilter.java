@@ -46,13 +46,12 @@ public class TokenAuthnzFilter implements Filter {
     final String authorizationHeader = httpRequest.getHeader("Authorization");
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
       final String tokenString = authorizationHeader.trim().substring(authorizationHeader.indexOf(" ") + 1);
-      logger.info("Bearer token: '{}'", tokenString);
       try {
         final Jws<Claims> jws = Jwts.parserBuilder()
             .setSigningKey(key)
             .build()
             .parseClaimsJws(tokenString);
-        logger.info("Successfully parsed JWT");
+        logger.debug("Successfully parsed JWT");
         // we can safely trust the JWT
         final Claims tokenBody = jws.getBody();
         final String subject = tokenBody.getSubject();
@@ -92,11 +91,13 @@ public class TokenAuthnzFilter implements Filter {
   private String determineRole(final Claims tokenBody) {
     final String issuer = tokenBody.getIssuer();
     logger.info("Token created by {}", issuer);
-    final String issuerRole = ldapRoleLookupService.getRole(issuer);
-    logger.info("Token creator has role {}", issuerRole);
     if (tokenBody.containsKey("role")) {
-      return tokenBody.get("role", String.class);
+      final String tokenRole = tokenBody.get("role", String.class);
+      logger.info("Token has role {}", tokenRole);
+      return tokenRole;
     } else {
+      final String issuerRole = ldapRoleLookupService.getRole(issuer);
+      logger.info("Token inherits role from creator: {}", issuerRole);
       return issuerRole;
     }
   }

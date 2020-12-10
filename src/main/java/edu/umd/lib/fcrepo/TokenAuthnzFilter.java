@@ -85,7 +85,7 @@ public class TokenAuthnzFilter implements Filter {
   }
 
   private HttpServletRequest requestWithUserAndRole(HttpServletRequest request, Principal userPrincipal, String role) {
-    return new ProvideRoleRequestWrapper(new ProvideUserPrincipalRequestWrapper(request, userPrincipal), role);
+    return new ProvideRolesRequestWrapper(new ProvideUserPrincipalRequestWrapper(request, userPrincipal), role);
   }
 
   private String determineRole(final Claims tokenBody) {

@@ -1,7 +1,7 @@
 package edu.umd.lib.fcrepo;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.security.Principal;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,16 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.ldaptive.BindConnectionInitializer;
-import org.ldaptive.ConnectionConfig;
 import org.ldaptive.ConnectionFactory;
-import org.ldaptive.Credential;
-import org.ldaptive.DefaultConnectionFactory;
-import org.ldaptive.LdapAttribute;
-import org.ldaptive.LdapEntry;
-import org.ldaptive.LdapException;
 import org.ldaptive.SearchExecutor;
-import org.ldaptive.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -63,7 +55,7 @@ public class FedoraRolesFilter implements Filter {
   public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
     final HttpServletRequest httpRequest = (HttpServletRequest) request;
     if (httpRequest.getUserPrincipal() != null) {
-      final AttributePrincipal principal = (AttributePrincipal) httpRequest.getUserPrincipal();
+      final Principal principal = httpRequest.getUserPrincipal();
       logger.info("User principal found in request: {}", principal);
       final String userName = principal.toString();
 
@@ -72,7 +64,7 @@ public class FedoraRolesFilter implements Filter {
       if (role != null) {
         logger.info("User {} has role {}", userName, role);
         // wrap the request so that it will answer "true" for the correct roles
-        chain.doFilter(new ProvideRoleRequestWrapper(httpRequest, role), response);
+        chain.doFilter(new ProvideRolesRequestWrapper(httpRequest, role), response);
       } else {
         logger.debug("No fedora roles found for user {}", userName);
         chain.doFilter(httpRequest, response);

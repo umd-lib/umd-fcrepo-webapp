@@ -248,10 +248,13 @@
               <LDAP_ADMIN_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_ADMIN_GROUP>
               <LDAP_USER_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_USER_GROUP>
               <IP_MAPPING_FILE>conf/test-ip-mapping.properties</IP_MAPPING_FILE>
+              <CREDENTIALS_FILE>conf/basic-auth.properties</CREDENTIALS_FILE>
             </systemProperties>
           </container>
           <configuration>
             <properties>
+              <!-- the umd-fcrepo_mail service uses the default (8025) -->
+              <cargo.rmi.port>1099</cargo.rmi.port>
               <!-- Debug Mode On -->
               <cargo.jvmargs>-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Xms512m -Xmx1024m -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC</cargo.jvmargs>
               <!-- Debug Mode Off -->
@@ -260,8 +263,13 @@
             <configfiles>
               <configfile>
                 <!-- Include "test-ip-mapping.properties" for the IP Mapping Filter for use as default mapping file-->
-	              <file>${project.basedir}/src/test/resources/test-ip-mapping.properties</file>
-	              <todir>conf</todir>
+                <file>${project.basedir}/src/test/resources/test-ip-mapping.properties</file>
+                <todir>conf</todir>
+              </configfile>
+              <configfile>
+                <!-- BasicAuthFilter configuration file -->
+                <file>${project.basedir}/src/test/resources/basic-auth.properties</file>
+                <todir>conf</todir>
               </configfile>
             </configfiles>
           </configuration>

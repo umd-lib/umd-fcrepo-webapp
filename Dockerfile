@@ -23,7 +23,11 @@ RUN mvn package -DwarFileName=umd-fcrepo-webapp
 # See LIBFCREPO-903 for more information and a tester program.
 FROM tomcat:7.0.106-jdk8-openjdk-buster@sha256:7389e901db3b2f9bb0268ce4cbd2ec2e1010db1ef43e04c49a64d96b156d0022
 
-COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /usr/local/tomcat/webapps/ROOT.war
+# default context path is the root, making the full URL e.g. http://localhost:8080/
+ENV CONTEXT_PATH=""
+RUN mkdir -p /opt/umd-fcrepo-webapp
+COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/
 COPY setenv.sh /usr/local/tomcat/bin/
+COPY server.xml /usr/local/tomcat/conf/
 
 VOLUME /var/umd-fcrepo-webapp

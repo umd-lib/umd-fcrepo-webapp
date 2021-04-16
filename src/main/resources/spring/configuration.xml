@@ -3,8 +3,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:task="http://www.springframework.org/schema/task"
-  xmlns:p="http://www.springframework.org/schema/p"
-  xmlns:c="http://www.springframework.org/schema/c"
   xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="
   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -21,12 +19,11 @@
 
 
   <!-- ********************************** MODESHAPE configuration ********************************** -->
-  <bean name="modeshapeRepofactory"
-    class="org.fcrepo.kernel.modeshape.spring.ModeShapeRepositoryFactoryBean"
-    p:repositoryConfiguration="${fcrepo.modeshape.configuration}"
-    depends-on="authenticationProvider"/>
+  <bean name="modeshapeRepofactory" class="org.fcrepo.kernel.modeshape.spring.ModeShapeRepositoryFactoryBean" depends-on="authenticationProvider">
+    <property name="repositoryConfiguration" value="${fcrepo.modeshape.configuration:classpath:/repository.json}"/>
+  </bean>
 
-  <!-- Optional PrincipalProvider that will inspect the request header, "some-header", for user role values -->
+  <!-- Optional PrincipalProvider that will inspect a request header for user role values -->
   <bean name="headerProvider" class="org.fcrepo.auth.common.HttpHeaderPrincipalProvider">
     <property name="headerName" value="X-UMDLibDelegatePrincipal"/>
     <property name="separator" value=","/>
@@ -66,14 +63,13 @@
 
   <!-- ************************************* JMS/Eventing Configuration ************************************* -->
   <!-- publishes events from the internal bus to JMS -->
-  <bean class="org.fcrepo.jms.JMSTopicPublisher"/>
+  <bean class="org.fcrepo.jms.JMSQueuePublisher">
+    <constructor-arg value="fedora"/>
+  </bean>
 
-  <bean id="connectionFactory"
-    class="org.apache.activemq.ActiveMQConnectionFactory" depends-on="jmsBroker"
-    p:brokerURL="vm://localhost:61616?create=false"/>
-
-  <bean name="jmsBroker" class="org.apache.activemq.xbean.BrokerFactoryBean"
-    p:config="${fcrepo.activemq.configuration}" p:start="true"/>
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="${ACTIVEMQ_URL}"/>
+  </bean>
 
   <!-- translates events into JMS header-only format-->
   <bean class="org.fcrepo.jms.DefaultMessageFactory"/>
@@ -96,7 +92,42 @@
   <task:executor id="taskExecutor" pool-size="1" />
   <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler" />
 
-  <!-- Auditing -->
-  <!-- publishes events from the internal bus to JMS -->
-  <bean class="org.fcrepo.audit.InternalAuditor"/>
+  <!-- UMD AuthNZ config -->
+  <bean name="ldapLookupService" class="edu.umd.lib.fcrepo.LdapRoleLookupService">
+    <property name="ldapURL" value="${LDAP_URL}"/>
+    <property name="bindDN" value="${LDAP_BIND_DN}"/>
+    <property name="bindPassword" value="${LDAP_BIND_PASSWORD}"/>
+    <property name="baseDN" value="${LDAP_BASE_DN}"/>
+    <property name="memberAttribute" value="${LDAP_MEMBER_ATTRIBUTE}"/>
+    <property name="adminGroup" value="${LDAP_ADMIN_GROUP}"/>
+    <property name="userGroup" value="${LDAP_USER_GROUP}"/>
+  </bean>
+
+  <bean name="authTokenService" class="edu.umd.lib.fcrepo.AuthTokenService">
+    <property name="secret" value="${JWT_SECRET}"/>
+  </bean>
+
+  <bean name="casService" class="edu.umd.lib.fcrepo.CasService">
+    <property name="casUrlPrefix" value="${CAS_URL_PREFIX}"/>
+  </bean>
+
+  <bean name="casAuthenticationFilter" class="org.jasig.cas.client.authentication.AuthenticationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}" />
+    <property name="casServerLoginUrl" value="${CAS_URL_PREFIX}/login"/>
+  </bean>
+  <bean name="casValidationFilter" class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}"/>
+    <property name="ticketValidator">
+      <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+        <constructor-arg index="0" value="${CAS_URL_PREFIX}" />
+      </bean>
+    </property>
+  </bean>
+  <bean name="basicAuthFilter" class="edu.umd.lib.fcrepo.BasicAuthFilter">
+    <property name="credentialsFile" value="${CREDENTIALS_FILE}"/>
+  </bean>
+  <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.IpMapperFilter">
+    <property name="headerName" value="X-Auth-IP-Mapper"/>
+    <property name="mappingFile" value="${IP_MAPPING_FILE}"/>
+  </bean>
 </beans>

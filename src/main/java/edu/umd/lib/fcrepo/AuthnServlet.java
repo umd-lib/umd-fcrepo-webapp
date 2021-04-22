@@ -19,6 +19,7 @@ public class AuthnServlet extends HttpServlet {
     }
     request.setAttribute("userName", request.getRemoteUser());
     request.setAttribute("repositoryRootPath", request.getContextPath() + "/rest");
+    request.setAttribute("userManagementRootPath", request.getContextPath() + "/user");
 
     // check for a destination query parameter, and redirect there if one is found
     // but only if it looks like a path (i.e., don't allow redirects to absolute URIs)

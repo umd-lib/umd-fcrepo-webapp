@@ -15,7 +15,7 @@
     <p><a href="${repositoryRootPath}">Fedora REST API Endpoint</a></p>
 
     <c:if test='${userRole == "fedoraAdmin"}'>
-      <form action="/user/token" method="get">
+      <form action="${userManagementRootPath}/token" method="get">
         <p>
           <label>Subject: <input name="subject"/></label>
           <label>Role:
@@ -29,7 +29,7 @@
       </form>
     </c:if>
 
-    <form action="/user/logout" method="post">
+    <form action="${userManagementRootPath}/logout" method="post">
       <p><button>Log out</button></p>
     </form>
   </body>

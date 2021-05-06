@@ -25,6 +25,9 @@ FROM tomcat:7.0.106-jdk8-openjdk-buster@sha256:7389e901db3b2f9bb0268ce4cbd2ec2e1
 
 # default context path is the root, making the full URL e.g. http://localhost:8080/
 ENV CONTEXT_PATH=""
+# default heap size is 2 GB
+ENV TOMCAT_HEAP=2048m
+
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/
 COPY setenv.sh /usr/local/tomcat/bin/

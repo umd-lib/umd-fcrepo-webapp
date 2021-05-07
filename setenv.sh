@@ -1,1 +1,11 @@
-export CATALINA_OPTS="-Dfcrepo.home=/var/umd-fcrepo-webapp -Dfcrepo.context.path=${CONTEXT_PATH}"
+export CATALINA_OPTS="-XX:+UseConcMarkSweepGC \
+  -XX:+CMSClassUnloadingEnabled \
+  -XX:ConcGCThreads=5 \
+  -XX:MaxGCPauseMillis=200 \
+  -XX:ParallelGCThreads=20 \
+  -XX:MaxMetaspaceSize=512M \
+  -Xms${TOMCAT_HEAP} \
+  -Xmx${TOMCAT_HEAP} \
+  -Dfile.encoding=UTF-8 \
+  -Dfcrepo.home=/var/umd-fcrepo-webapp \
+  -Dfcrepo.context.path=${CONTEXT_PATH}"

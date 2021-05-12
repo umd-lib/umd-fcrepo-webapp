@@ -34,3 +34,5 @@ COPY setenv.sh /usr/local/tomcat/bin/
 COPY server.xml /usr/local/tomcat/conf/
 
 VOLUME /var/umd-fcrepo-webapp
+# for the store-and-forward broker
+VOLUME /var/activemq

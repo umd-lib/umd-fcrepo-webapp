@@ -8,4 +8,5 @@ export CATALINA_OPTS="-XX:+UseConcMarkSweepGC \
   -Xmx${TOMCAT_HEAP} \
   -Dfile.encoding=UTF-8 \
   -Dfcrepo.home=/var/umd-fcrepo-webapp \
+  -Dfcrepo.activemq.directory=/var/activemq \
   -Dfcrepo.context.path=${CONTEXT_PATH}"

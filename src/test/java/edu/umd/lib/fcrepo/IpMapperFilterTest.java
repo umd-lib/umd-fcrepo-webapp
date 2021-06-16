@@ -21,7 +21,7 @@ public class IpMapperFilterTest {
   private MockFilterChain mockChain = null;
   
   private IpMapperFilter ipMapperFilter = null;
-  private static String HEADER_NAME = "TEST-IPMAPPER-HEADER";
+  private static final String HEADER_NAME = "TEST-IPMAPPER-HEADER";
 
   @Before
   public void setUp() throws Exception {

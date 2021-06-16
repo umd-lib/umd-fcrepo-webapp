@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -27,6 +29,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 /**
  * Checks a user's IP address against a properties file containing a list of
@@ -308,7 +311,7 @@ class HeaderRequestWrapper extends HttpServletRequestWrapper {
   /**
    * A Map of headers for the request
    */
-  private final Map<String, String> headers = new HashMap<>();
+  private final Map<String, List<String>> headers = new LinkedCaseInsensitiveMap<>();
 
   /**
    * Wraps the given HttpServletRequest
@@ -324,20 +327,36 @@ class HeaderRequestWrapper extends HttpServletRequestWrapper {
     if (headerNameEnums != null) {
       ArrayList<String> headerNames = Collections.list(request.getHeaderNames());
       for (String headerName : headerNames) {
-        headers.put(headerName, request.getHeader(headerName));
+        headers.put(headerName, Collections.list(request.getHeaders(headerName)));
       }
     }
   }
 
   @Override
   public Enumeration<String> getHeaderNames() {
-    Set<String> headerKeys = headers.keySet();
-    return java.util.Collections.enumeration(headerKeys);
+    final Set<String> headerKeys = new HashSet<>();
+    for (final String headerName : headers.keySet()) {
+      headerKeys.add(headerName.toLowerCase(Locale.ROOT));
+    }
+    return Collections.enumeration(headerKeys);
+  }
+
+  @Override
+  public Enumeration<String> getHeaders(String headerName) {
+    List<String> values = headers.get(headerName);
+    if (values == null || values.isEmpty()) {
+      return Collections.emptyEnumeration();
+    }
+    return Collections.enumeration(values);
   }
 
   @Override
   public String getHeader(String headerName) {
-    return headers.get(headerName);
+    final Enumeration<String> headerValues = getHeaders(headerName);
+    if (headerValues != null && headerValues.hasMoreElements()) {
+      return headerValues.nextElement();
+    }
+    return null;
   }
 
   /**
@@ -350,7 +369,7 @@ class HeaderRequestWrapper extends HttpServletRequestWrapper {
    *          the value of the header
    */
   public void addHeader(String headerName, String value) {
-    headers.put(headerName, value);
+    headers.put(headerName, Collections.singletonList(value));
   }
 
   /**

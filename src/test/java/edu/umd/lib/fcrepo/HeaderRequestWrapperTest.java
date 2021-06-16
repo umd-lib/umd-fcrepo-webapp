@@ -11,14 +11,12 @@ import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class HeaderRequestWrapperTest {
-  private MockFilterConfig mockFilterConfig = null;
   private MockHttpServletRequest mockRequest = null;
-  
-  private static String HEADER_NAME = "TEST-IPMAPPER-HEADER";
 
   @Before
   public void setUp() throws Exception {
-    mockFilterConfig = new MockFilterConfig();
+    MockFilterConfig mockFilterConfig = new MockFilterConfig();
+    String HEADER_NAME = "TEST-IPMAPPER-HEADER";
     mockFilterConfig.addInitParameter("headerName", HEADER_NAME);
             
     mockRequest = new MockHttpServletRequest();
@@ -40,9 +38,9 @@ public class HeaderRequestWrapperTest {
     Enumeration<String> headerNames = wrapper.getHeaderNames();
 
     String firstHeaderName = headerNames.nextElement();
-    assertEquals("TEST-HEADER", firstHeaderName);
+    assertEquals("test-header", firstHeaderName);
 
-    String firstHeaderValue = wrapper.getHeader("TEST-HEADER");
+    String firstHeaderValue = wrapper.getHeader("test-header");
     assertEquals("foobar", firstHeaderValue);
 
     assertFalse(headerNames.hasMoreElements());
@@ -61,9 +59,9 @@ public class HeaderRequestWrapperTest {
     
     
     String firstHeaderName = headerNames.nextElement();
-    assertEquals("TEST-HEADER-TO-KEEP", firstHeaderName);
+    assertEquals("test-header-to-keep", firstHeaderName);
 
-    String firstHeaderValue = wrapper.getHeader("TEST-HEADER-TO-KEEP");
+    String firstHeaderValue = wrapper.getHeader("test-header-to-keep");
     assertEquals("KEEP_ME", firstHeaderValue);
 
     assertFalse(headerNames.hasMoreElements());

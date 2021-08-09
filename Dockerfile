@@ -13,15 +13,8 @@ COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR
 RUN mvn package -DwarFileName=umd-fcrepo-webapp
 
-# Note: Pinning the tomcat image to this precise image hash, because it uses
-# OpenJDK v8u265. A later version of this image uses OpenJDK v8u272, which
-# has an LDAP issue similar to https://bugs.openjdk.java.net/browse/JDK-8214440
-# This sha256 was recovered from the UMD Nexus by examining the "manifests"
-# folder for the "tomcat" image and examining the "last_modified" dates of
-# when they were downloaded.
-#
-# See LIBFCREPO-903 for more information and a tester program.
-FROM tomcat:7.0.106-jdk8-openjdk-buster@sha256:7389e901db3b2f9bb0268ce4cbd2ec2e1010db1ef43e04c49a64d96b156d0022
+# Note: Specifying SHA256 hash to ensure Docker base image consistency
+FROM tomcat:7.0.109-jdk8-openjdk-slim-buster@sha256:50a7b08272c0ac084bd03f39b5967321da43d96539043608384194bc54f744de
 
 # default context path is the root, making the full URL e.g. http://localhost:8080/
 ENV CONTEXT_PATH=""

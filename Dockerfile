@@ -13,8 +13,8 @@ COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR
 RUN mvn package -DwarFileName=umd-fcrepo-webapp
 
-# Note: Specifying SHA256 hash to ensure Docker base image consistency
-FROM tomcat:7.0.109-jdk8-openjdk-slim-buster@sha256:50a7b08272c0ac084bd03f39b5967321da43d96539043608384194bc54f744de
+# Note: Specifying SHA256 hash (for the "linux/amd64" architecture) to ensure Docker base image consistency
+FROM tomcat:7.0.109-jdk8-openjdk-slim-buster@sha256:429a25e0870545b4c9209fc7d048f1cd36a588f47b5088f8e130e49e7214353d
 
 # default context path is the root, making the full URL e.g. http://localhost:8080/
 ENV CONTEXT_PATH=""

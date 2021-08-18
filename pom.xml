@@ -282,6 +282,18 @@
           </deployables>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.37.0</version>
+        <configuration>
+          <images>
+            <image>
+              <name>docker.lib.umd.edu/fcrepo-webapp:%l</name>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

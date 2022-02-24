@@ -248,6 +248,7 @@
               <LDAP_ADMIN_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_ADMIN_GROUP>
               <LDAP_USER_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_USER_GROUP>
               <IP_MAPPING_FILE>conf/test-ip-mapping.properties</IP_MAPPING_FILE>
+              <IP_MAPPING_HEADER_NAME>X-Auth-IP-Mapping</IP_MAPPING_HEADER_NAME>
               <CREDENTIALS_FILE>conf/basic-auth.properties</CREDENTIALS_FILE>
             </systemProperties>
           </container>

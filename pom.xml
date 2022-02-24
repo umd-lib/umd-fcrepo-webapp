@@ -10,7 +10,7 @@
   <artifactId>umd-fcrepo-webapp</artifactId>
   <name>UMD Fedora Repository Deployable Web Application</name>
   <description>The Fedora web application</description>
-  <version>2.6.0</version>
+  <version>2.6.1</version>
   <packaging>war</packaging>
 
   <properties>
@@ -248,6 +248,7 @@
               <LDAP_ADMIN_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_ADMIN_GROUP>
               <LDAP_USER_GROUP>cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu</LDAP_USER_GROUP>
               <IP_MAPPING_FILE>conf/test-ip-mapping.properties</IP_MAPPING_FILE>
+              <IP_MAPPING_HEADER_NAME>X-Auth-IP-Mapping</IP_MAPPING_HEADER_NAME>
               <CREDENTIALS_FILE>conf/basic-auth.properties</CREDENTIALS_FILE>
             </systemProperties>
           </container>

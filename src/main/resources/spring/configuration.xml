@@ -25,7 +25,7 @@
 
   <!-- Optional PrincipalProvider that will inspect a request header for user role values -->
   <bean name="headerProvider" class="org.fcrepo.auth.common.HttpHeaderPrincipalProvider">
-    <property name="headerName" value="X-UMDLibDelegatePrincipal"/>
+    <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
     <property name="separator" value=","/>
   </bean>
 
@@ -133,7 +133,7 @@
     <property name="credentialsFile" value="${CREDENTIALS_FILE}"/>
   </bean>
   <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.IpMapperFilter">
-    <property name="headerName" value="X-Auth-IP-Mapper"/>
+    <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
     <property name="mappingFile" value="${IP_MAPPING_FILE}"/>
   </bean>
 </beans>

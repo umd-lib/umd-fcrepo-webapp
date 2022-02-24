@@ -73,6 +73,7 @@ properties, to run the application:
 |`CAS_URL_PREFIX`              |✓|https://shib.idm.umd.edu/shibboleth-idp/profile/cas|
 |`FCREPO_BASE_URL`             |✓|http://localhost:8080/|
 |`IP_MAPPING_FILE`             |✓|conf/test-ip-mapping.properties|
+|`IP_MAPPING_HEADER_NAME`      |✓|X-Auth-IP-Mapping|
 |`CREDENTIALS_FILE`            |✓|conf/basic-auth.properties|
 |`JWT_SECRET`                  | ||
 |`LDAP_URL`                    |✓|ldap://directory.umd.edu|

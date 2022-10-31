@@ -5,7 +5,7 @@
 # docker build -t docker.lib.umd.edu/fcrepo-webapp:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
-FROM maven:3.6.3-jdk-8-slim AS compile
+FROM maven:3.8.6-eclipse-temurin-11 AS compile
 
 ENV SOURCE_DIR /opt/umd-fcrepo-webapp
 COPY src $SOURCE_DIR/src
@@ -13,8 +13,7 @@ COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR
 RUN mvn package -DwarFileName=umd-fcrepo-webapp
 
-# Note: Specifying SHA256 hash (for the "linux/amd64" architecture) to ensure Docker base image consistency
-FROM tomcat:7.0.109-jdk8-openjdk-slim-buster@sha256:429a25e0870545b4c9209fc7d048f1cd36a588f47b5088f8e130e49e7214353d
+FROM tomcat:8.5.83-jdk8-temurin-jammy
 
 # default context path is the root, making the full URL e.g. http://localhost:8080/
 ENV CONTEXT_PATH=""

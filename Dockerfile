@@ -23,7 +23,7 @@ ENV TOMCAT_HEAP=2048m
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/
 COPY setenv.sh /usr/local/tomcat/bin/
-COPY server.xml /usr/local/tomcat/conf/
+COPY server.xml catalina.properties /usr/local/tomcat/conf/
 
 VOLUME /var/umd-fcrepo-webapp
 # for the store-and-forward broker

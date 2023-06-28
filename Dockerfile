@@ -5,7 +5,7 @@
 # docker build -t docker.lib.umd.edu/fcrepo-webapp:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
-FROM maven:3.8.6-eclipse-temurin-11 AS compile
+FROM maven:3.8.6-eclipse-temurin-8 AS compile
 
 ENV SOURCE_DIR /opt/umd-fcrepo-webapp
 COPY src $SOURCE_DIR/src
@@ -23,7 +23,7 @@ ENV TOMCAT_HEAP=2048m
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/
 COPY setenv.sh /usr/local/tomcat/bin/
-COPY server.xml /usr/local/tomcat/conf/
+COPY server.xml catalina.properties logging.properties /usr/local/tomcat/conf/
 
 VOLUME /var/umd-fcrepo-webapp
 # for the store-and-forward broker

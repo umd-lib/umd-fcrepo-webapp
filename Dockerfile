@@ -5,7 +5,7 @@
 # docker build -t docker.lib.umd.edu/fcrepo-webapp:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
-FROM maven:3.8.6-eclipse-temurin-11 AS compile
+FROM maven:3.8.6-eclipse-temurin-8 AS compile
 
 ENV SOURCE_DIR /opt/umd-fcrepo-webapp
 COPY src $SOURCE_DIR/src

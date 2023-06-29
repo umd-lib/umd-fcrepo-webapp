@@ -3,7 +3,7 @@
 <configuration>
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%p %d{HH:mm:ss.SSS} \(%c{0}\) %m%n</pattern>
+      <pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSS} %level [%thread] %class.%method %message%n</pattern>
     </encoder>
   </appender>
 

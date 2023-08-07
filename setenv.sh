@@ -9,4 +9,5 @@ export CATALINA_OPTS="-XX:+UseConcMarkSweepGC \
   -Dfile.encoding=UTF-8 \
   -Dfcrepo.home=/var/umd-fcrepo-webapp \
   -Dfcrepo.activemq.directory=/var/activemq \
-  -Dfcrepo.context.path=${CONTEXT_PATH}"
+  -Dfcrepo.context.path=${CONTEXT_PATH} \
+  -Dconnection.timeout=${CONNECTION_TIMEOUT}"

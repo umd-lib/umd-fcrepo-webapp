@@ -94,7 +94,7 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-module-auth-webac</artifactId>
-      <version>${fcrepo.version}-rc1</version>
+      <version>${fcrepo.version}-rc2</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>

@@ -97,6 +97,11 @@
       <version>${fcrepo.version}</version>
     </dependency>
     <dependency>
+      <groupId>edu.umd.lib</groupId>
+      <artifactId>umd-fcrepo-auth-utils</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-spring3</artifactId>
       <version>${jersey.version}</version>

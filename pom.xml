@@ -14,9 +14,6 @@
   <packaging>war</packaging>
 
   <properties>
-    <!-- overriding ActiveMQ version; minimum version should be 5.15.16 -->
-    <!-- see https://umd-dit.atlassian.net/browse/LIBDEVOPS-242 -->
-    <activemq.version>5.15.16</activemq.version>
     <apache.commons.validator.version>1.7</apache.commons.validator.version>
     <fcrepo.version>4.7.6-umd-1.0-SNAPSHOT</fcrepo.version>
     <logback.version>1.2.3</logback.version>
@@ -198,45 +195,7 @@
       <version>1.2</version>
     </dependency>
 
-    <!-- overriding ActiveMQ version; minimum version should be 5.15.16 -->
-    <!-- see https://umd-dit.atlassian.net/browse/LIBDEVOPS-242 -->
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-spring</artifactId>
-      <version>${activemq.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-kahadb-store</artifactId>
-      <version>${activemq.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-stomp</artifactId>
-      <version>${activemq.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <!-- Test dependencies --> 
+    <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

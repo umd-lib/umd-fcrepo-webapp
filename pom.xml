@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo-parent</artifactId>
-    <version>4.7.6-umd-1.0-SNAPSHOT</version>
+    <version>4.7.6-umd-1.0</version>
   </parent>
 
   <groupId>edu.umd.lib</groupId>
@@ -14,17 +14,22 @@
   <packaging>war</packaging>
 
   <properties>
+    <fcrepo.version>4.7.6-umd-1.0</fcrepo.version>
+    <warFileName>${project.artifactId}-${project.version}</warFileName>
+    <!-- additional dependency versions -->
     <apache.commons.validator.version>1.7</apache.commons.validator.version>
-    <fcrepo.version>4.7.6-umd-1.0-SNAPSHOT</fcrepo.version>
+    <java.cas.client.version>3.6.0</java.cas.client.version>
+    <javax.servlet.version>3.1.0</javax.servlet.version>
+    <jersey.version>2.25.1</jersey.version>
+    <jstl.version>1.2</jstl.version>
+    <junit.version>4.13.1</junit.version>
+    <jwt.version>0.11.2</jwt.version>
+    <ldaptive.version>1.2.4</ldaptive.version>
     <logback.version>1.2.3</logback.version>
     <pgsql.version>9.4.1211</pgsql.version>
     <spring.version>5.3.16</spring.version>
     <spring.security.web.version>5.8.8</spring.security.web.version>
-    <jersey.version>2.25.1</jersey.version>
-    <java.cas.client.version>3.6.0</java.cas.client.version>
-    <warFileName>${project.artifactId}-${project.version}</warFileName>
-    <junit.version>4.13.1</junit.version>
-    <jwt.version>0.11.2</jwt.version>
+    <umd.fcrepo.auth.utils.version>1.0.0</umd.fcrepo.auth.utils.version>
   </properties>
 
   <distributionManagement>
@@ -112,7 +117,7 @@
     <dependency>
       <groupId>edu.umd.lib</groupId>
       <artifactId>umd-fcrepo-auth-utils</artifactId>
-      <version>1.0.0</version>
+      <version>${umd.fcrepo.auth.utils.version}</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
@@ -147,15 +152,15 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>${javax.servlet.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-        <groupId>org.ldaptive</groupId>
-        <artifactId>ldaptive</artifactId>
-        <version>1.2.4</version>
+      <groupId>org.ldaptive</groupId>
+      <artifactId>ldaptive</artifactId>
+      <version>${ldaptive.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
@@ -188,11 +193,10 @@
         <scope>runtime</scope>
     </dependency>
     -->
-
     <dependency>
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <version>${jstl.version}</version>
     </dependency>
 
     <!-- Test dependencies -->
@@ -215,6 +219,7 @@
 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.0.0</version>
         <configuration>

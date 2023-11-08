@@ -19,6 +19,8 @@ FROM tomcat:8.5.83-jdk8-temurin-jammy
 ENV CONTEXT_PATH=""
 # default heap size is 2 GB
 ENV TOMCAT_HEAP=2048m
+# default connection timout is 120 seconds (120,000 ms)
+ENV CONNECTION_TIMEOUT=120000
 
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/

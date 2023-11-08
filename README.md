@@ -90,17 +90,24 @@ properties, to run the application:
 
 ## Docker
 
-This repository contains a [Dockerfile](Dockerfile) for creating the image to
-use with the [umd-fcrepo-docker] stack:
+This repository contains a [Dockerfile](Dockerfile) for creating a Docker image.
+The POM file includes the [fabric8io docker-maven-plugin], so creating the image
+is as simple as running:
 
 ```bash
-docker build -t docker.lib.umd.edu/fcrepo-webapp .
+mvn docker:build
 ```
+
+The resulting image will be tagged as `docker.lib.umd.edu/fcrepo-webapp`, 
+plus a version string. If the `project.version` property defined in the POM 
+file is a SNAPSHOT, the version string will be "latest". Otherwise, it will 
+be the `project.version` property value from the POM file.
+
+[Docker plugin configuration](pom.xml#L285-L296)
 
 ## Special Thanks
 
 This repository is based on the [Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.
-
 
 ## License
 
@@ -112,3 +119,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.
 [src/test/resources/test-ip-mapping.properties]: src/test/resources/test-ip-mapping.properties
 [BasicAuthFilter]: src/main/java/edu/umd/lib/fcrepo/BasicAuthFilter.java
 [src/test/resources/basic-auth.properties]: src/test/resources/basic-auth.properties
+[fabric8io docker-maven-plugin]: http://dmp.fabric8.io/

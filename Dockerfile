@@ -24,8 +24,7 @@ ENV CONNECTION_TIMEOUT=120000
 
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/
-COPY setenv.sh /usr/local/tomcat/bin/
-COPY server.xml catalina.properties logging.properties /usr/local/tomcat/conf/
+COPY src/docker/usr/local/tomcat/ /usr/local/tomcat/
 
 VOLUME /var/umd-fcrepo-webapp
 # for the store-and-forward broker

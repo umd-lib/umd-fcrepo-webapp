@@ -58,39 +58,47 @@ The [BasicAuthFilter], which processes `Authorization: Basic ...` HTTP headers
 (if present), is configured by [src/test/resources/basic-auth.properties]. The
 following users are configured:
 
-| Username | Password | Role      |
-|----------|----------|-----------|
-|loris     |loris     |fedoraAdmin|
+| Username | Password | Role        |
+|----------|----------|-------------|
+| loris    | loris    | fedoraAdmin |
 
 ### Environment Variables
 
 These values MUST be set, either via environment variables of Java system
 properties, to run the application:
 
-| Name | Provided by `cargo:run` | Value provided by `cargo:run` |
-|:--------------------------|:---|:---------------|
-|`ACTIVEMQ_URL`                |✓|tcp://localhost:61616|
-|`CAS_URL_PREFIX`              |✓|https://shib.idm.umd.edu/shibboleth-idp/profile/cas|
-|`FCREPO_BASE_URL`             |✓|http://localhost:8080/|
-|`IP_MAPPING_FILE`             |✓|conf/test-ip-mapping.properties|
-|`IP_MAPPING_HEADER_NAME`      |✓|X-Auth-IP-Mapping|
-|`CREDENTIALS_FILE`            |✓|conf/basic-auth.properties|
-|`JWT_SECRET`                  | ||
-|`LDAP_URL`                    |✓|ldap://directory.umd.edu|
-|`LDAP_BASE_DN`                |✓|ou=people,dc=umd,dc=edu|
-|`LDAP_BIND_DN`                |✓|uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu|
-|`LDAP_BIND_PASSWORD`          | ||
-|`LDAP_MEMBER_ATTRIBUTE`       |✓|memberOf|
-|`LDAP_ADMIN_GROUP`            |✓|cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu|
-|`LDAP_USER_GROUP`             |✓|cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu|
-|`MODESHAPE_DB_DRIVER`         |✓|org.postgresql.Driver|
-|`MODESHAPE_DB_URL`            |✓|jdbc:postgresql://localhost:5432/fcrepo_modeshape5|
-|`MODESHAPE_DB_USERNAME`       |✓|fcrepo|
-|`MODESHAPE_DB_PASSWORD`       | ||
+| Name                     | Provided by `cargo:run` | Value provided by `cargo:run`                                                                |
+|:-------------------------|:------------------------|:---------------------------------------------------------------------------------------------|
+| `ACTIVEMQ_URL`           | ✓                       | tcp://localhost:61616                                                                        |
+| `CAS_URL_PREFIX`         | ✓                       | https://shib.idm.umd.edu/shibboleth-idp/profile/cas                                          |
+| `FCREPO_BASE_URL`        | ✓                       | http://localhost:8080/                                                                       |
+| `IP_MAPPING_FILE`        | ✓                       | conf/test-ip-mapping.properties                                                              |
+| `IP_MAPPING_HEADER_NAME` | ✓                       | X-Auth-IP-Mapping                                                                            |
+| `CREDENTIALS_FILE`       | ✓                       | conf/basic-auth.properties                                                                   |
+| `JWT_SECRET`             |                         ||
+| `LDAP_URL`               | ✓                       | ldap://directory.umd.edu                                                                     |
+| `LDAP_BASE_DN`           | ✓                       | ou=people,dc=umd,dc=edu                                                                      |
+| `LDAP_BIND_DN`           | ✓                       | uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu                                                |
+| `LDAP_BIND_PASSWORD`     |                         ||
+| `LDAP_MEMBER_ATTRIBUTE`  | ✓                       | memberOf                                                                                     |
+| `LDAP_ADMIN_GROUP`       | ✓                       | cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu |
+| `LDAP_USER_GROUP`        | ✓                       | cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu          |
+| `MODESHAPE_DB_DRIVER`    | ✓                       | org.postgresql.Driver                                                                        |
+| `MODESHAPE_DB_URL`       | ✓                       | jdbc:postgresql://localhost:5432/fcrepo_modeshape5                                           |
+| `MODESHAPE_DB_USERNAME`  | ✓                       | fcrepo                                                                                       |
+| `MODESHAPE_DB_PASSWORD`  |                         ||
 
 ## Docker
 
 This repository contains a [Dockerfile](Dockerfile) for creating a Docker image.
+The configuration files used to create the Docker image are located in the
+[src/docker](src/docker) directory, in a path structure that mirrors their
+destination locations in the image.
+
+⚠️ **Note:** The following instructions only create a single-architecture build
+for the architecture of the current host machine. To create a multi-architecture
+build, you will need to run `docker buildx build ...` directly.
+
 The POM file includes the [fabric8io docker-maven-plugin], so creating the image
 is as simple as running:
 

@@ -129,9 +129,6 @@
       </bean>
     </property>
   </bean>
-  <bean name="basicAuthFilter" class="edu.umd.lib.fcrepo.BasicAuthFilter">
-    <property name="credentialsFile" value="${CREDENTIALS_FILE}"/>
-  </bean>
   <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.IpMapperFilter">
     <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
     <property name="mappingFile" value="${IP_MAPPING_FILE}"/>

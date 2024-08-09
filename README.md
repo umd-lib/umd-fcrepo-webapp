@@ -25,7 +25,7 @@ service after deploying the stack:
 # in the umd-fcrepo-docker directory
 docker stack deploy -c umd-fcrepo.yml umd-fcrepo
 docker service rm umd-fcrepo_repository
-``` 
+```
 
 You must also provide environment variables for the LDAP bind password, Postgres
 database password, and JWT secret:
@@ -47,20 +47,12 @@ mvn cargo:run
 
 ### Configuration
 
-The [IpMapperFilter], which determines access rights to resources, uses the 
+The [IpMapperFilter], which determines access rights to resources, uses the
 [src/test/resources/test-ip-mapping.properties] file by default, which does not
 provide any access rights for the `localhost` user. This can be modified by
 adding the localhost address (`127.0.0.1/32`) to a category in the
 `test-ip-mapping.properties` file, or by specifying a different file in the
 [pom.xml](pom.xml) file.
-
-The [BasicAuthFilter], which processes `Authorization: Basic ...` HTTP headers
-(if present), is configured by [src/test/resources/basic-auth.properties]. The
-following users are configured:
-
-| Username | Password | Role        |
-|----------|----------|-------------|
-| loris    | loris    | fedoraAdmin |
 
 ### Environment Variables
 
@@ -74,7 +66,6 @@ properties, to run the application:
 | `FCREPO_BASE_URL`        | ✓                       | http://localhost:8080/                                                                       |
 | `IP_MAPPING_FILE`        | ✓                       | conf/test-ip-mapping.properties                                                              |
 | `IP_MAPPING_HEADER_NAME` | ✓                       | X-Auth-IP-Mapping                                                                            |
-| `CREDENTIALS_FILE`       | ✓                       | conf/basic-auth.properties                                                                   |
 | `JWT_SECRET`             |                         ||
 | `LDAP_URL`               | ✓                       | ldap://directory.umd.edu                                                                     |
 | `LDAP_BASE_DN`           | ✓                       | ou=people,dc=umd,dc=edu                                                                      |
@@ -106,9 +97,9 @@ is as simple as running:
 mvn docker:build
 ```
 
-The resulting image will be tagged as `docker.lib.umd.edu/fcrepo-webapp`, 
-plus a version string. If the `project.version` property defined in the POM 
-file is a SNAPSHOT, the version string will be "latest". Otherwise, it will 
+The resulting image will be tagged as `docker.lib.umd.edu/fcrepo-webapp`,
+plus a version string. If the `project.version` property defined in the POM
+file is a SNAPSHOT, the version string will be "latest". Otherwise, it will
 be the `project.version` property value from the POM file.
 
 [Docker plugin configuration](pom.xml#L285-L296)
@@ -125,6 +116,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
 [IpMapperFilter]: src/main/java/edu/umd/lib/fcrepo/IpMapperFilter.java
 [src/test/resources/test-ip-mapping.properties]: src/test/resources/test-ip-mapping.properties
-[BasicAuthFilter]: src/main/java/edu/umd/lib/fcrepo/BasicAuthFilter.java
-[src/test/resources/basic-auth.properties]: src/test/resources/basic-auth.properties
 [fabric8io docker-maven-plugin]: http://dmp.fabric8.io/

@@ -42,7 +42,7 @@
     <servlet-name>token-servlet</servlet-name>
     <servlet-class>edu.umd.lib.fcrepo.GenerateTokenServlet</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
     <url-pattern>/rest/*</url-pattern>
@@ -143,19 +143,6 @@
   </filter-mapping>
 
   <filter>
-    <filter-name>HTTP Basic Auth Filter</filter-name>
-    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    <init-param>
-      <param-name>targetBeanName</param-name>
-      <param-value>basicAuthFilter</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>HTTP Basic Auth Filter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <filter>
     <filter-name>Fedora Roles Filter</filter-name>
     <filter-class>edu.umd.lib.fcrepo.FedoraRolesFilter</filter-class>
   </filter>
@@ -166,7 +153,7 @@
     <url-pattern>/rest/*</url-pattern>
     <url-pattern>/user/*</url-pattern>
   </filter-mapping>
-  
+
   <filter>
     <filter-name>Fedora IP Mapper Filter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

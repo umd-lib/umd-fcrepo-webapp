@@ -28,6 +28,11 @@ import java.util.Set;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
+// Note: This class was originally added to support authentication from the
+// Loris IIIF image server which is no longer used.
+//
+// The configuration that used this class was removed in LIBFCREPO-1518, so
+// this class may no longer be necessary.
 public class BasicAuthFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(BasicAuthFilter.class);
 

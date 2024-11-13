@@ -7,7 +7,7 @@
 # where <VERSION> is the Docker image version to create.
 FROM maven:3.8.6-eclipse-temurin-8 AS compile
 
-ENV SOURCE_DIR /opt/umd-fcrepo-webapp
+ENV SOURCE_DIR=/opt/umd-fcrepo-webapp
 COPY src $SOURCE_DIR/src
 COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR

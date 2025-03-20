@@ -13,7 +13,7 @@ COPY pom.xml $SOURCE_DIR
 WORKDIR $SOURCE_DIR
 RUN mvn package -DwarFileName=umd-fcrepo-webapp
 
-FROM tomcat:8.5.83-jdk8-temurin-jammy
+FROM tomcat:9.0.102-jdk8-temurin-jammy
 
 # default context path is the root, making the full URL e.g. http://localhost:8080/
 ENV CONTEXT_PATH=""

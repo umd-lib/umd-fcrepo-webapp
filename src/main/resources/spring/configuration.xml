@@ -98,16 +98,56 @@
   <task:executor id="taskExecutor" pool-size="1" />
   <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler" />
 
-  <!-- UMD AuthNZ config -->
-  <bean name="ldapLookupService" class="edu.umd.lib.fcrepo.LdapRoleLookupService">
-    <property name="ldapURL" value="${LDAP_URL}"/>
-    <property name="bindDN" value="${LDAP_BIND_DN}"/>
-    <property name="bindPassword" value="${LDAP_BIND_PASSWORD}"/>
-    <property name="baseDN" value="${LDAP_BASE_DN}"/>
-    <property name="memberAttribute" value="${LDAP_MEMBER_ATTRIBUTE}"/>
-    <property name="adminGroup" value="${LDAP_ADMIN_GROUP}"/>
-    <property name="userGroup" value="${LDAP_USER_GROUP}"/>
-  </bean>
+<bean name="ldapConnectionConfig" class="org.ldaptive.ConnectionConfig">
+  <property name="ldapUrl" value="${LDAP_URL}" />
+  <property name="useStartTLS" value="true" />
+  <property name="connectionInitializer">
+    <bean class="org.ldaptive.BindConnectionInitializer">
+      <constructor-arg value="${LDAP_BIND_DN}" />
+      <constructor-arg>
+        <bean class="org.ldaptive.Credential">
+          <constructor-arg value="${LDAP_BIND_PASSWORD}" />
+        </bean>
+      </constructor-arg>
+    </bean>
+  </property>
+</bean>
+
+<bean name="ldapConnectionPool" class="org.ldaptive.pool.SoftLimitConnectionPool" init-method="initialize">
+  <property name="connectionFactory">
+    <bean class="org.ldaptive.DefaultConnectionFactory">
+      <constructor-arg ref="ldapConnectionConfig" />
+    </bean>
+  </property>
+
+  <property name="validator">
+    <bean class="org.ldaptive.pool.SearchValidator" />
+  </property>
+
+  <property name="validateOnCheckOut" value="true" />
+
+  <property name="poolListeners">
+    <list>
+      <bean class="org.ldaptive.pool.LoggingConnectionPoolListener" />
+    </list>
+  </property>
+
+  <property name="minPoolSize" value="1" />
+  <property name="maxPoolSize" value="10" />
+</bean>
+
+<!-- UMD AuthNZ config -->
+<bean name="ldapLookupService" class="edu.umd.lib.fcrepo.LdapRoleLookupService">
+  <property name="connectionConfig" ref="ldapConnectionConfig"/>
+  <property name="connectionPool" ref="ldapConnectionPool"/>
+  <property name="ldapURL" value="${LDAP_URL}"/>
+  <property name="bindDN" value="${LDAP_BIND_DN}"/>
+  <property name="bindPassword" value="${LDAP_BIND_PASSWORD}"/>
+  <property name="baseDN" value="${LDAP_BASE_DN}"/>
+  <property name="memberAttribute" value="${LDAP_MEMBER_ATTRIBUTE}"/>
+  <property name="adminGroup" value="${LDAP_ADMIN_GROUP}"/>
+  <property name="userGroup" value="${LDAP_USER_GROUP}"/>
+</bean>
 
   <bean name="authTokenService" class="edu.umd.lib.fcrepo.AuthTokenService">
     <property name="secret" value="${JWT_SECRET}"/>

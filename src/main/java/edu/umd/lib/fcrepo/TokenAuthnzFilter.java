@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.Principal;
 
+import static edu.umd.lib.fcrepo.FedoraRolesFilter.ADMIN_ROLE;
+import static edu.umd.lib.fcrepo.FedoraRolesFilter.SESSION_ROLE_KEY;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 public class TokenAuthnzFilter implements Filter {
@@ -60,9 +62,15 @@ public class TokenAuthnzFilter implements Filter {
         final String tokenRole = determineRole(tokenBody);
         final Principal userPrincipal = new AttributePrincipalImpl(subject);
         final HttpServletRequest newRequest = requestWithUserAndRole(httpRequest, userPrincipal, tokenRole);
+        if (tokenRole != null) {
+          // stash the token role in the session, so the FedoraRolesFilter later in the
+          // chain doesn't do an unnecessary LDAP lookup
+          newRequest.getSession().setAttribute(SESSION_ROLE_KEY, tokenRole);
+          logger.debug("Saved role {} to session", tokenRole);
+        }
         logger.debug("Request remote user: {}", newRequest.getRemoteUser());
         logger.debug("Request user principal: {}", newRequest.getUserPrincipal());
-        logger.debug("Request user is admin? {}", newRequest.isUserInRole("fedoraAdmin"));
+        logger.debug("Request user is admin? {}", newRequest.isUserInRole(ADMIN_ROLE));
         chain.doFilter(newRequest, response);
       } catch (final JwtException e) {
         // we *cannot* use the JWT as intended by its creator

@@ -1,0 +1,36 @@
+@startuml
+skinparam defaultTextAlignment center
+title umd-fcrepo-webapp Servlet Filter Chain
+
+start
+:<b>reverse-proxy-filter
+edu.umd.lib.fcrepo.ReverseProxyFilter;
+:<b>CAS Single Sign Out Filter
+org.jasig.cas.client.session.SingleSignOutFilter;
+if (request URI matches /user/*) then (yes)
+  :<b>CAS Authentication Filter
+  org.springframework.web.filter.DelegatingFilterProxy
+
+  targetBeanName=casAuthenticationFilter;
+else (no)
+endif
+:<b>CAS Validation Filter
+org.springframework.web.filter.DelegatingFilterProxy
+
+targetBeanName=casValidationFilter;
+:<b>CAS HttpServletRequest Wrapper Filter
+org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
+:<b>JWT Bearer Token AuthNZ Filter
+edu.umd.lib.fcrepo.TokenAuthnzFilter;
+if (request URI matches /rest/* or /user/*) then (yes)
+  :<b>Fedora Roles Filter
+  edu.umd.lib.fcrepo.FedoraRolesFilter;
+  :<b>Fedora IP Mapper Filter
+  org.springframework.web.filter.DelegatingFilterProxy
+
+  targetBeanName=ipMapperFilter;
+else (no)
+endif
+stop
+
+@enduml

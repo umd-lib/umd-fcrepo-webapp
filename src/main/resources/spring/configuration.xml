@@ -118,19 +118,20 @@
   </bean>
 
   <bean name="ldapPoolConfig" class="org.ldaptive.pool.PoolConfig">
-    <property name="validateOnCheckOut" value="true" />
+    <property name="validatePeriodically" value="true" />
   </bean>
 
   <bean name="ldapSearchValidator" class="org.ldaptive.pool.SearchValidator">
     <property name="searchRequest">
       <bean class="org.ldaptive.SearchRequest">
         <property name="baseDn" value="${LDAP_BASE_DN}"/>
-        <property name="searchFilter" value="(cn=*)"/>
+        <property name="searchFilter" value="(${LDAP_BASE_DN})"/>
+        <property name="sizeLimit" value="1"/>
       </bean>
     </property>
   </bean>
 
-  <bean name="ldapConnectionPool" class="org.ldaptive.pool.SoftLimitConnectionPool">
+  <bean name="ldapConnectionPool" class="org.ldaptive.pool.BlockingConnectionPool">
     <constructor-arg ref="ldapConnectionFactory"/>
     <constructor-arg ref="ldapPoolConfig"/>
     <property name="validator" ref="ldapSearchValidator"/>

@@ -12,25 +12,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.ldaptive.ConnectionFactory;
-import org.ldaptive.SearchExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class FedoraRolesFilter implements Filter {
+  public static final String SESSION_ROLE_KEY = "fedoraUserRole";
+
+  public static final String ADMIN_ROLE = "fedoraAdmin";
+
   private static final Logger logger = LoggerFactory.getLogger(FedoraRolesFilter.class);
-
-  private ConnectionFactory cf;
-
-  private String memberAttribute;
-
-  private String adminGroup;
-
-  private String userGroup;
-
-  private SearchExecutor searchExecutor;
 
   private LdapRoleLookupService ldapRoleLookupService;
 
@@ -83,24 +74,24 @@ public class FedoraRolesFilter implements Filter {
   /**
    * Returns the role for the user, or null if the role cannot be found.
    * 
-   * Implementation: This method first checks the HttpRequest session for the
+   * <p>Implementation: This method first checks the HttpRequest session for the
    * role. If a role is not found in the session, it performs an LDAP search
    * using the given userName. If a role is found, it is stored in the
-   * session and returned.
+   * session and returned.</p>
    * 
    * @param httpRequest the current HttpRequest object
    * @param userName the login id of the user
    * @return a role name string: "fedoraAdmin", "fedoraUser", or null
    */
   private String getRole(final HttpServletRequest httpRequest, final String userName) {
-    final String SESSION_ROLE_KEY = "fedoraUserRole";
-    
     // Attempt to retrieve role from session
     final HttpSession session = httpRequest.getSession(false);
     if ((session != null) && (session.getAttribute(SESSION_ROLE_KEY) != null)) {
        final String role = session.getAttribute(SESSION_ROLE_KEY).toString();
        logger.debug("User {} has role {} from session", userName, role);
        return role;
+    } else {
+        logger.debug("No role found in session");
     }
     
     // Retrieve role from LDAP 

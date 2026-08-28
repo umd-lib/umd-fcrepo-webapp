@@ -1,119 +1,140 @@
-# UMD Libraries Fedora Web Application
+# umd-fcrepo-webapp
 
-This is a custom build of Fedora as a servlet-deployable web application.
+This is a custom build of [Fedora] as a servlet-deployable web
+application, including additional authentication and authorization
+configuration for UMD Libraries.
 
-## Building
+## Quick Start
 
-```bash
-mvn clean package
+Clone the repo:
+
+```zsh
+git clone git@github.com:umd-lib/umd-fcrepo-webapp.git
+cd umd-fcrepo-webapp
 ```
 
-The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target` directory.
+Create a `.env` file with the following variables:
 
-## Running with Cargo
+| Name                 | Value                                       |
+|----------------------|---------------------------------------------|
+| `JWT_SECRET`         | any sufficiently long random string         |
+| `LDAP_BIND_PASSWORD` | available in the SSDR LastPass shared items |
 
-The application can also be run locally using the [Maven Cargo plugin] and
-`cargo:run` command. This requires the WAR file to already be built using
-`mvn package`.
+The output of `uuidgen | base64` makes a good `JWT_SECRET` value.
 
-The [POM file](pom.xml) contains configuration suitable for running the
-application using the [umd-fcrepo-docker] stack to provide the backing
-services. However, this does require you to remove the `umd-fcrepo_repository`
-service after deploying the stack:
+Build and run the Docker image using Docker Compose:
 
-```bash
-# in the umd-fcrepo-docker directory
-docker stack deploy -c umd-fcrepo.yml umd-fcrepo
-docker service rm umd-fcrepo_repository
+```zsh
+docker compose build
+docker compose up
 ```
 
-You must also provide environment variables for the LDAP bind password, Postgres
-database password, and JWT secret:
+To ensure that CAS authentication works correctly, you will need to add
+the hostname `fcrepo-local` to your `/etc/hosts` file:
 
-```bash
-mvn clean package
-
-export MODESHAPE_DB_PASSWORD=...  # default in the umd-fcrepo-docker stack is "fcrepo"
-export LDAP_BIND_PASSWORD=...     # see the SSDR "Identities" document for this
-export JWT_SECRET=...             # can be anything, but must be sufficiently long
-                                  # one method to generate a random secret is:
-                                  #   uuidgen | shasum -a256 | cut -d' ' -f1
-mvn cargo:run
+```
+127.0.0.1  fcrepo-local
 ```
 
-* <http://localhost:8080/> - Main splash page
-* <http://localhost:8080/rest> - REST API endpoint
-* <http://localhost:8080/user> - Login/user profile page
+The web application will be running at <http://fcrepo-local:8080/fcrepo>
 
-### Configuration
+## Component Versions
 
-The [IpMapperFilter], which determines access rights to resources, uses the
-[src/test/resources/test-ip-mapping.properties] file by default, which does not
-provide any access rights for the `localhost` user. This can be modified by
-adding the localhost address (`127.0.0.1/32`) to a category in the
-`test-ip-mapping.properties` file, or by specifying a different file in the
-[pom.xml](pom.xml) file.
-
-### Environment Variables
-
-These values MUST be set, either via environment variables of Java system
-properties, to run the application:
-
-| Name                     | Provided by `cargo:run` | Value provided by `cargo:run`                                                                |
-|:-------------------------|:------------------------|:---------------------------------------------------------------------------------------------|
-| `ACTIVEMQ_URL`           | ✓                       | tcp://localhost:61616                                                                        |
-| `CAS_URL_PREFIX`         | ✓                       | https://shib.idm.umd.edu/shibboleth-idp/profile/cas                                          |
-| `FCREPO_BASE_URL`        | ✓                       | http://localhost:8080/                                                                       |
-| `IP_MAPPING_FILE`        | ✓                       | conf/test-ip-mapping.properties                                                              |
-| `IP_MAPPING_HEADER_NAME` | ✓                       | X-Auth-IP-Mapping                                                                            |
-| `JWT_SECRET`             |                         ||
-| `LDAP_URL`               | ✓                       | ldap://directory.umd.edu                                                                     |
-| `LDAP_BASE_DN`           | ✓                       | ou=people,dc=umd,dc=edu                                                                      |
-| `LDAP_BIND_DN`           | ✓                       | uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu                                                |
-| `LDAP_BIND_PASSWORD`     |                         ||
-| `LDAP_MEMBER_ATTRIBUTE`  | ✓                       | memberOf                                                                                     |
-| `LDAP_ADMIN_GROUP`       | ✓                       | cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu |
-| `LDAP_USER_GROUP`        | ✓                       | cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu          |
-| `MODESHAPE_DB_DRIVER`    | ✓                       | org.postgresql.Driver                                                                        |
-| `MODESHAPE_DB_URL`       | ✓                       | jdbc:postgresql://localhost:5432/fcrepo_modeshape5                                           |
-| `MODESHAPE_DB_USERNAME`  | ✓                       | fcrepo                                                                                       |
-| `MODESHAPE_DB_PASSWORD`  |                         ||
+* [Java 25.0] (Eclipse Temurin)
+* [Tomcat 10.1]
+* [Fedora 7.0]
 
 ## Docker
 
-This repository contains a [Dockerfile](Dockerfile) for creating a Docker image.
+To build the Docker image:
+
+```zsh
+docker build -t docker.lib.umd.edu/fcrepo-webapp:latest .
+```
+
 The configuration files used to create the Docker image are located in the
 [src/docker](src/docker) directory, in a path structure that mirrors their
 destination locations in the image.
 
-⚠️ **Note:** The following instructions only create a single-architecture build
-for the architecture of the current host machine. To create a multi-architecture
-build, you will need to run `docker buildx build ...` directly.
+Additional runtime configuration files used by the Docker Compose stack
+are located in the [conf](conf) directory.
 
-The POM file includes the [fabric8io docker-maven-plugin], so creating the image
-is as simple as running:
+## Environment Variables
+
+| Name                     | Provided by `compose.yml` | Value provided by `compose.yml`                                                              |
+|:-------------------------|:--------------------------|:---------------------------------------------------------------------------------------------|
+| `CAS_URL_PREFIX`         | ✓                         | https://shib.idm.umd.edu/shibboleth-idp/profile/cas                                          |
+| `CONTEXT_PATH`           | ✓                         | /fcrepo                                                                                      |
+| `FCREPO_BASE_URL`        | ✓                         | http://fcrepo-local:8080/                                                                    |
+| `FCREPO_LOG_LEVEL`       | ✓                         | DEBUG                                                                                        |
+| `IP_MAPPING_HEADER_NAME` | ✓                         | X-Auth-IP-Mapping                                                                            |
+| `JWT_SECRET`             |                           |                                                                                              |
+| `LDAP_URL`               | ✓                         | ldap://directory.umd.edu                                                                     |
+| `LDAP_BASE_DN`           | ✓                         | ou=people,dc=umd,dc=edu                                                                      |
+| `LDAP_BIND_DN`           | ✓                         | uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu                                                |
+| `LDAP_BIND_PASSWORD`     |                           |                                                                                              |
+| `LDAP_MEMBER_ATTRIBUTE`  | ✓                         | memberOf                                                                                     |
+| `LDAP_ADMIN_GROUP`       | ✓                         | cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu |
+| `LDAP_USER_GROUP`        | ✓                         | cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu          |
+| `UMD_LIB_LOG_LEVEL`      | ✓                         | DEBUG                                                                                        |
+
+## Logging Configuration
+
+This application has a [logback.xml](src/main/resources/logback.xml) that has
+been customized from the upstream fcrepo version of this configuration. The
+customizations are:
+
+* Changed the names of the system properties used to set the log levels for
+  the various loggers to an environment variable style (all-caps and with `_`
+  instead of `.` as a separator). The purpose is to make runtime configuration
+  of logging easier in Docker and Kubernetes contexts.
+* Added a property to control the log level of the `edu.umd` package, allowing
+  configuration of logging in our custom servlets, filters, and wrappers.
+
+| Logger                    | Environment Variable            | Default in `logback.xml` |
+|---------------------------|---------------------------------|--------------------------|
+| Root Logger               | `LOG_LEVEL`                     | WARN                     |
+| `org.fcrepo`              | `FCREPO_LOG_LEVEL`              | INFO                     |
+| `edu.umd.lib`             | `UMD_LIB_LOG_LEVEL`             | INFO                     |
+| `org.fcrepo.auth`         | `FCREPO_AUTH_LOG_LEVEL`         |                          |
+| `org.fcrepo.config`       | `FCREPO_CONFIG_LOG_LEVEL`       |                          |
+| `org.fcrepo.event`        | `FCREPO_EVENT_LOG_LEVEL`        |                          |
+| `org.fcrepo.http.api`     | `FCREPO_HTTP_API_LOG_LEVEL`     |                          |
+| `org.fcrepo.http.commons` | `FCREPO_HTTP_COMMONS_LOG_LEVEL` |                          |
+| `org.fcrepo.jms`          | `FCREPO_JMS_LOG_LEVEL`          |                          |
+| `org.fcrepo.kernel`       | `FCREPO_KERNEL_LOG_LEVEL`       |                          |
+| `org.fcrepo.persistence`  | `FCREPO_PERSISTENCE_LOG_LEVEL`  |                          |
+| `org.fcrepo.search`       | `FCREPO_SEARCH_LOG_LEVEL`       |                          |
+| `org.fcrepo.storage`      | `FCREPO_STORAGE_LOG_LEVEL`      |                          |
+
+## Development
+
+To develop and build the project locally, you will need Java 25.0. There is
+a `.java-version` file in the project which will select the correct JDK for
+you if you have [jenv] installed.
+
+To build the WAR file:
 
 ```bash
-mvn docker:build
+mvn clean install
 ```
 
-The resulting image will be tagged as `docker.lib.umd.edu/fcrepo-webapp`,
-plus a version string. If the `project.version` property defined in the POM
-file is a SNAPSHOT, the version string will be "latest". Otherwise, it will
-be the `project.version` property value from the POM file.
-
-[Docker plugin configuration](pom.xml#L285-L296)
+The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target`
+directory.
 
 ## Special Thanks
 
-This repository is based on the [Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp) created and maintained by Aaron Coburn and Bethany Seeger.
+This repository is originally based on the
+[Amherst College custom Fedora build](https://gitlab.amherst.edu/acdc/amherst-fedora-webapp)
+created and maintained by Aaron Coburn and Bethany Seeger.
 
 ## License
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
+See the [LICENSE](LICENSE.md) file for license rights and limitations
+(Apache 2.0).
 
-[Maven Cargo plugin]: https://codehaus-cargo.github.io/cargo/Maven2+plugin.html
-[umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
-[IpMapperFilter]: src/main/java/edu/umd/lib/fcrepo/IpMapperFilter.java
-[src/test/resources/test-ip-mapping.properties]: src/test/resources/test-ip-mapping.properties
-[fabric8io docker-maven-plugin]: http://dmp.fabric8.io/
+[Fedora]: https://fedorarepository.org/
+[jenv]: https://www.jenv.be/
+[Java 25.0]: https://adoptium.net/temurin/release-notes?version=25
+[Tomcat 10.1]: https://tomcat.apache.org/tomcat-10.1-doc/index.html
+[Fedora 7.0]: https://fedorarepository.org/fedora7announcement/

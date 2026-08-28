@@ -1,0 +1,107 @@
+package edu.umd.lib.fcrepo.filters;
+
+import java.io.IOException;
+import java.security.Principal;
+
+import edu.umd.lib.fcrepo.services.LdapRoleLookupService;
+import edu.umd.lib.fcrepo.requests.ProvideRolesRequestWrapper;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+public class FedoraRolesFilter implements Filter {
+  public static final String SESSION_ROLE_KEY = "fedoraUserRole";
+
+  public static final String ADMIN_ROLE = "fedoraAdmin";
+
+  private static final Logger logger = LoggerFactory.getLogger(FedoraRolesFilter.class);
+
+  private LdapRoleLookupService ldapRoleLookupService;
+
+  @Override
+  public void init(FilterConfig filterConfig) {
+    ldapRoleLookupService = WebApplicationContextUtils
+        .getRequiredWebApplicationContext(filterConfig.getServletContext())
+        .getBean(LdapRoleLookupService.class);
+  }
+
+  /**
+   * If the user is authenticated, use their Grouper groups to determine which Fedora roles to
+   * place them in.
+   *
+   * @param request the current request object
+   * @param response the current response object
+   * @param chain the current filter chain
+   */
+  @Override
+  public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
+    final HttpServletRequest httpRequest = (HttpServletRequest) request;
+    if (httpRequest.getUserPrincipal() != null) {
+      final Principal principal = httpRequest.getUserPrincipal();
+      logger.info("User principal found in request: {}", principal);
+      final String userName = principal.toString();
+
+      final String role = getRole(httpRequest, userName);
+
+      if (role != null) {
+        logger.info("User {} has role {}", userName, role);
+        // wrap the request so that it will answer "true" for the correct roles
+        chain.doFilter(new ProvideRolesRequestWrapper(httpRequest, role), response);
+      } else {
+        logger.debug("No fedora roles found for user {}", userName);
+        chain.doFilter(httpRequest, response);
+      }
+    } else {
+      logger.debug("No user principal in request");
+      chain.doFilter(httpRequest, response);
+    }
+  }
+
+  @Override
+  public void destroy() {
+
+  }
+
+  /**
+   * Returns the role for the user, or null if the role cannot be found.
+   *
+   * <p>Implementation: This method first checks the HttpRequest session for the
+   * role. If a role is not found in the session, it performs an LDAP search
+   * using the given userName. If a role is found, it is stored in the
+   * session and returned.</p>
+   *
+   * @param httpRequest the current HttpRequest object
+   * @param userName the login id of the user
+   * @return a role name string: "fedoraAdmin", "fedoraUser", or null
+   */
+  private String getRole(final HttpServletRequest httpRequest, final String userName) {
+    // Attempt to retrieve role from session
+    final HttpSession session = httpRequest.getSession(false);
+    if ((session != null) && (session.getAttribute(SESSION_ROLE_KEY) != null)) {
+       final String role = session.getAttribute(SESSION_ROLE_KEY).toString();
+       logger.debug("User {} has role {} from session", userName, role);
+       return role;
+    } else {
+        logger.debug("No role found in session");
+    }
+
+    // Retrieve role from LDAP 
+    logger.debug("Attempting to retrieve role for {} from LDAP", userName);
+    final String role = ldapRoleLookupService.getRole(userName);
+    logger.debug("User {} has role {} from LDAP", userName, role);
+
+    // Store role in session
+    if (role != null && session != null) {
+      session.setAttribute(SESSION_ROLE_KEY, role);
+    }
+    return role;
+  }
+}

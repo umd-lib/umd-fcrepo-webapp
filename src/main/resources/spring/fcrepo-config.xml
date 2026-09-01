@@ -86,8 +86,8 @@
     </property>
   </bean>
 
-  <!-- bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.filters.IpMapperFilter">
+  <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.filters.IpMapperFilter">
     <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
-    <property name="mappingFile" value="${IP_MAPPING_FILE}"/>
-  </bean -->
+    <property name="ipManagerServiceUrl" value="${IP_MANAGER_SERVICE_URL}"/>
+  </bean>
 </beans>

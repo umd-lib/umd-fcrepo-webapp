@@ -1,0 +1,396 @@
+{
+  "@id": "http://ipmanager.lib.umd.edu/check?ip=129.2.89.38",
+  "ip": "129.2.89.38",
+  "checks": [
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=henson&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/henson",
+        "key": "henson",
+        "name": "The Jim Henson Works"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=mckeldin-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/mckeldin-public",
+        "key": "mckeldin-public",
+        "name": "McKeldin Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=mckeldin-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/mckeldin-staff",
+        "key": "mckeldin-staff",
+        "name": "McKeldin Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=pal-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/pal-public",
+        "key": "pal-public",
+        "name": "Performing Arts Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=pal-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/pal-staff",
+        "key": "pal-staff",
+        "name": "Performing Arts Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=hornbake-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/hornbake-public",
+        "key": "hornbake-public",
+        "name": "Hornbake Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=hornbake-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/hornbake-staff",
+        "key": "hornbake-staff",
+        "name": "Hornbake Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=prange&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/prange",
+        "key": "prange",
+        "name": "Prange"
+      },
+      "ip": "129.2.89.38",
+      "contained": true
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=um&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/um",
+        "key": "um",
+        "name": "UMD College Park campus and VPN"
+      },
+      "ip": "129.2.89.38",
+      "contained": true
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=films&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/films",
+        "key": "films",
+        "name": "Films@UM"
+      },
+      "ip": "129.2.89.38",
+      "contained": true
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=world&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/world",
+        "key": "world",
+        "name": "Any IP Address"
+      },
+      "ip": "129.2.89.38",
+      "contained": true
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=shady-grove-umfilms&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/shady-grove-umfilms",
+        "key": "shady-grove-umfilms",
+        "name": "Films@UM, Shady Grove"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=stem-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/stem-public",
+        "key": "stem-public",
+        "name": "STEM Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=stem-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/stem-staff",
+        "key": "stem-staff",
+        "name": "STEM Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=mspal-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/mspal-public",
+        "key": "mspal-public",
+        "name": "MSPAL Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=mspal-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/mspal-staff",
+        "key": "mspal-staff",
+        "name": "MSPAL Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=arch-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/arch-public",
+        "key": "arch-public",
+        "name": "Architecture Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=arch-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/arch-staff",
+        "key": "arch-staff",
+        "name": "Architecture Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=art-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/art-public",
+        "key": "art-public",
+        "name": "Art Library (Public)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=art-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/art-staff",
+        "key": "art-staff",
+        "name": "Art Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=severn-staff&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/severn-staff",
+        "key": "severn-staff",
+        "name": "Severn Library (Staff)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=um-vpn&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/um-vpn",
+        "key": "um-vpn",
+        "name": "UMD College Park VPN"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=usmai-ezproxy-umbc&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/usmai-ezproxy-umbc",
+        "key": "usmai-ezproxy-umbc",
+        "name": "USMAI EZProxy (UMBC)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=umbc&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/umbc",
+        "key": "umbc",
+        "name": "UMBC"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=arch-selfcheck&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/arch-selfcheck",
+        "key": "arch-selfcheck",
+        "name": "Architecture Library (Self-Check)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=mckeldin-selfcheck&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/mckeldin-selfcheck",
+        "key": "mckeldin-selfcheck",
+        "name": "McKeldin Library (Self-Check)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=um-lib-servers-campus&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/um-lib-servers-campus",
+        "key": "um-lib-servers-campus",
+        "name": "UM Libraries Campus Only Range"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=um-lib-servers-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/um-lib-servers-public",
+        "key": "um-lib-servers-public",
+        "name": "UM Libraries World Accessible Range"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-prod-dss-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-prod-dss-public",
+        "key": "aws-prod-dss-public",
+        "name": "AWS prod-dss Public"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-prod-dss-private&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-prod-dss-private",
+        "key": "aws-prod-dss-private",
+        "name": "AWS prod-dss Private"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-dev-dss-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-dev-dss-public",
+        "key": "aws-dev-dss-public",
+        "name": "AWS dev-dss Public"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-dev-dss-private&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-dev-dss-private",
+        "key": "aws-dev-dss-private",
+        "name": "AWS dev-dss Private"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-prod-usmai-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-prod-usmai-public",
+        "key": "aws-prod-usmai-public",
+        "name": "AWS prod-usmai Public"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-prod-usmai-private&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-prod-usmai-private",
+        "key": "aws-prod-usmai-private",
+        "name": "AWS prod-usmai Private"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-dev-usmai-public&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-dev-usmai-public",
+        "key": "aws-dev-usmai-public",
+        "name": "AWS dev-usmai Public"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=aws-dev-usmai-private&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/aws-dev-usmai-private",
+        "key": "aws-dev-usmai-private",
+        "name": "AWS dev-usmai Private"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=usmai-ezproxy-umcp&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/usmai-ezproxy-umcp",
+        "key": "usmai-ezproxy-umcp",
+        "name": "USMAI EZProxy (UMCP)"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=usmai-ezproxy&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/usmai-ezproxy",
+        "key": "usmai-ezproxy",
+        "name": "USMAI EZProxy"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    },
+    {
+      "@id": "http://ipmanager.lib.umd.edu/check?group=wapava&ip=129.2.89.38",
+      "group": {
+        "@id": "http://ipmanager.lib.umd.edu/groups/wapava",
+        "key": "wapava",
+        "name": "Washington Area Performing Arts"
+      },
+      "ip": "129.2.89.38",
+      "contained": false
+    }
+  ]
+}

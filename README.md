@@ -76,6 +76,7 @@ are located in the [conf](conf) directory.
 | `LDAP_MEMBER_ATTRIBUTE`  | ✓                         | memberOf                                                                                     |
 | `LDAP_ADMIN_GROUP`       | ✓                         | cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu |
 | `LDAP_USER_GROUP`        | ✓                         | cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu          |
+| `LOG_LEVEL`              | ✓                         | INFO                                                                                         |
 | `UMD_LIB_LOG_LEVEL`      | ✓                         | DEBUG                                                                                        |
 
 ## Logging Configuration

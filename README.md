@@ -130,7 +130,7 @@ created and maintained by Aaron Coburn and Bethany Seeger.
 
 ## License
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations
+See the [LICENSE](LICENSE) file for license rights and limitations
 (Apache 2.0).
 
 [Fedora]: https://fedorarepository.org/

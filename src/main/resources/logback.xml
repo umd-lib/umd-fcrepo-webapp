@@ -40,6 +40,9 @@
   <logger name="org.fcrepo" additivity="false" level="${FCREPO_LOG_LEVEL:-INFO}">
     <appender-ref ref="STDOUT"/>
   </logger>
+  <logger name="org.apache.activemq" additivity="false" level="${ACTIVEMQ_LOG_LEVEL:-INFO}">
+    <appender-ref ref="STDOUT"/>
+  </logger>
   <logger name="edu.umd.lib" additivity="false" level="${UMD_LIB_LOG_LEVEL:-INFO}">
     <appender-ref ref="STDOUT"/>
   </logger>

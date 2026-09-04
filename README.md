@@ -63,6 +63,7 @@ are located in the [conf](conf) directory.
 
 | Name                     | Provided by `compose.yml` | Value provided by `compose.yml`                                                              |
 |:-------------------------|:--------------------------|:---------------------------------------------------------------------------------------------|
+| `ACTIVEMQ_LOG_LEVEL`     | ✓                         | INFO                                                                                         |
 | `CAS_URL_PREFIX`         | ✓                         | https://shib.idm.umd.edu/shibboleth-idp/profile/cas                                          |
 | `CONTEXT_PATH`           | ✓                         | /fcrepo                                                                                      |
 | `FCREPO_BASE_URL`        | ✓                         | http://fcrepo-local:8080/                                                                    |
@@ -96,6 +97,7 @@ customizations are:
 |---------------------------|---------------------------------|--------------------------|
 | Root Logger               | `LOG_LEVEL`                     | WARN                     |
 | `org.fcrepo`              | `FCREPO_LOG_LEVEL`              | INFO                     |
+| `org.apache.activemq`     | `ACTIVEMQ_LOG_LEVEL`            | INFO                     |
 | `edu.umd.lib`             | `UMD_LIB_LOG_LEVEL`             | INFO                     |
 | `org.fcrepo.auth`         | `FCREPO_AUTH_LOG_LEVEL`         |                          |
 | `org.fcrepo.config`       | `FCREPO_CONFIG_LOG_LEVEL`       |                          |

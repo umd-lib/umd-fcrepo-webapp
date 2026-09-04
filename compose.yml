@@ -14,6 +14,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - ACTIVEMQ_LOG_LEVEL=INFO
       - CAS_URL_PREFIX=https://shib.idm.umd.edu/shibboleth-idp/profile/cas
       - CONTEXT_PATH=/fcrepo
       - FCREPO_BASE_URL=http://fcrepo-local:8080/

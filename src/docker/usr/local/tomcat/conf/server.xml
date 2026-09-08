@@ -67,7 +67,7 @@
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
     <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="${connection.timeout}"
+               connectionTimeout="${CONNECTION_TIMEOUT}"
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
@@ -143,9 +143,15 @@
                directory="/dev" prefix="stdout" suffix="" rotatable="false"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
+        <!-- Detect if Fedora is running behind a reverse proxy -->
+        <Valve className="org.apache.catalina.valves.RemoteIpValve"
+               protocolHeader="X-Forwarded-Proto"
+               hostHeader="X-Forwarded-Host"
+               remoteIpHeader="X-Forwarded-For" />
+
         <!-- the context path can be controlled by setting the CONTEXT_PATH environment variable -->
-        <Context path="${fcrepo.context.path}" unpackWAR="false"
-                 docBase="/opt/umd-fcrepo-webapp/umd-fcrepo-webapp.war"/>
+        <Context path="${CONTEXT_PATH}"
+                 docBase="/opt/umd-fcrepo-webapp"/>
 
       </Host>
     </Engine>

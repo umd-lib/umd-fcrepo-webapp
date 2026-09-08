@@ -1,0 +1,42 @@
+name: umd-fcrepo-webapp
+services:
+  webapp:
+    image: docker.lib.umd.edu/fcrepo-webapp:latest
+    build: .
+    configs:
+      # It appears that logging levels must be set via the setenv.sh script
+      # and not the fcrepo.properties file
+      - source: setenv.sh
+        target: /usr/local/tomcat/bin/setenv.sh
+    volumes:
+      - fcrepo-home:/var/umd-fcrepo-webapp
+      - repository-messaging-data:/var/activemq
+    ports:
+      - "8080:8080"
+    environment:
+      - ACTIVEMQ_LOG_LEVEL=INFO
+      - CAS_URL_PREFIX=https://shib.idm.umd.edu/shibboleth-idp/profile/cas
+      - CONTEXT_PATH=/fcrepo
+      - FCREPO_BASE_URL=http://fcrepo-local:8080/
+      - FCREPO_LOG_LEVEL=DEBUG
+      - IP_MAPPING_HEADER_NAME=X-Auth-IP-Mapping
+      - JWT_SECRET
+      - LDAP_URL=ldap://directory.umd.edu
+      - LDAP_BASE_DN=ou=people,dc=umd,dc=edu
+      - LDAP_BIND_DN=uid=libr-fedora,cn=auth,ou=ldap,dc=umd,dc=edu
+      - LDAP_BIND_PASSWORD
+      - LDAP_MEMBER_ATTRIBUTE=memberOf
+      - LDAP_ADMIN_GROUP=cn=Application_Roles:Libraries:FCREPO:FCREPO-Administrator,ou=grouper,ou=group,dc=umd,dc=edu
+      - LDAP_USER_GROUP=cn=Application_Roles:Libraries:FCREPO:FCREPO-User,ou=grouper,ou=group,dc=umd,dc=edu
+      - LOG_LEVEL=INFO
+      - UMD_LIB_LOG_LEVEL=DEBUG
+    networks:
+      default:
+        aliases:
+          - fcrepo-local
+configs:
+  setenv.sh:
+    file: ./conf/setenv.sh
+volumes:
+  fcrepo-home:
+  repository-messaging-data:

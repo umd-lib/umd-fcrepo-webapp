@@ -1,14 +1,16 @@
 package edu.umd.lib.fcrepo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
-import java.util.Enumeration;
-
+import edu.umd.lib.fcrepo.requests.HeaderRequestWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.Enumeration;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class HeaderRequestWrapperTest {
   private MockHttpServletRequest mockRequest = null;

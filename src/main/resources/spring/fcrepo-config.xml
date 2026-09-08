@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+  ">
+
+  <!-- Master context for fcrepo4. -->
+
+  <context:property-placeholder/>
+  <context:annotation-config/>
+  <context:component-scan base-package="org.fcrepo"/>
+
+  <bean name="ldapConnectionConfig" class="org.ldaptive.ConnectionConfig">
+    <property name="ldapUrl" value="${LDAP_URL}" />
+    <property name="useStartTLS" value="true" />
+    <property name="connectionInitializer">
+      <bean class="org.ldaptive.BindConnectionInitializer">
+        <constructor-arg value="${LDAP_BIND_DN}" />
+        <constructor-arg>
+          <bean class="org.ldaptive.Credential">
+            <constructor-arg value="${LDAP_BIND_PASSWORD}" />
+          </bean>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
+
+  <bean name="ldapConnectionFactory" class="org.ldaptive.DefaultConnectionFactory">
+    <constructor-arg ref="ldapConnectionConfig" />
+  </bean>
+
+  <bean name="ldapPoolConfig" class="org.ldaptive.pool.PoolConfig">
+    <property name="validatePeriodically" value="true" />
+  </bean>
+
+  <bean name="ldapSearchValidator" class="org.ldaptive.pool.SearchValidator">
+    <property name="searchRequest">
+      <bean class="org.ldaptive.SearchRequest">
+        <property name="baseDn" value="${LDAP_BASE_DN}"/>
+        <property name="searchFilter" value="(${LDAP_BASE_DN})"/>
+        <property name="sizeLimit" value="1"/>
+      </bean>
+    </property>
+  </bean>
+
+  <bean name="ldapConnectionPool" class="org.ldaptive.pool.BlockingConnectionPool">
+    <constructor-arg ref="ldapConnectionFactory"/>
+    <constructor-arg ref="ldapPoolConfig"/>
+    <property name="validator" ref="ldapSearchValidator"/>
+  </bean>
+
+  <!-- UMD AuthNZ config -->
+  <bean name="ldapLookupService" class="edu.umd.lib.fcrepo.services.LdapRoleLookupService">
+    <property name="connectionConfig" ref="ldapConnectionConfig"/>
+    <property name="connectionPool" ref="ldapConnectionPool"/>
+    <property name="ldapURL" value="${LDAP_URL}"/>
+    <property name="bindDN" value="${LDAP_BIND_DN}"/>
+    <property name="bindPassword" value="${LDAP_BIND_PASSWORD}"/>
+    <property name="baseDN" value="${LDAP_BASE_DN}"/>
+    <property name="memberAttribute" value="${LDAP_MEMBER_ATTRIBUTE}"/>
+    <property name="adminGroup" value="${LDAP_ADMIN_GROUP}"/>
+    <property name="userGroup" value="${LDAP_USER_GROUP}"/>
+  </bean>
+
+  <bean name="authTokenService" class="edu.umd.lib.fcrepo.services.AuthTokenService">
+    <property name="secret" value="${JWT_SECRET}"/>
+  </bean>
+
+  <bean name="casService" class="edu.umd.lib.fcrepo.services.CasService">
+    <property name="casUrlPrefix" value="${CAS_URL_PREFIX}"/>
+  </bean>
+
+  <bean name="casAuthenticationFilter" class="org.apereo.cas.client.authentication.AuthenticationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}" />
+    <property name="casServerLoginUrl" value="${CAS_URL_PREFIX}/login"/>
+  </bean>
+  <bean name="casValidationFilter" class="org.apereo.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter">
+    <property name="serverName" value="${FCREPO_BASE_URL}"/>
+    <property name="ticketValidator">
+      <bean class="org.apereo.cas.client.validation.Cas20ServiceTicketValidator">
+        <constructor-arg index="0" value="${CAS_URL_PREFIX}" />
+      </bean>
+    </property>
+  </bean>
+
+  <!-- bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.filters.IpMapperFilter">
+    <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
+    <property name="mappingFile" value="${IP_MAPPING_FILE}"/>
+  </bean -->
+</beans>

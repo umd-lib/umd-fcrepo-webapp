@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import edu.umd.lib.fcrepo.filters.IpMapperFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletException;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -54,6 +54,9 @@ adding the localhost address (`127.0.0.1/32`) to a category in the
 `test-ip-mapping.properties` file, or by specifying a different file in the
 [pom.xml](pom.xml) file.
 
+The [BasicAuthFilter], which processes `Authorization: Basic ...` HTTP headers
+(if present), is configured by [src/test/resources/basic-auth.properties].
+
 ### Environment Variables
 
 These values MUST be set, either via environment variables of Java system
@@ -66,6 +69,7 @@ properties, to run the application:
 | `FCREPO_BASE_URL`        | ✓                       | http://localhost:8080/                                                                       |
 | `IP_MAPPING_FILE`        | ✓                       | conf/test-ip-mapping.properties                                                              |
 | `IP_MAPPING_HEADER_NAME` | ✓                       | X-Auth-IP-Mapping                                                                            |
+| `CREDENTIALS_FILE`       | ✓                       | conf/basic-auth.properties                                                                   |
 | `JWT_SECRET`             |                         ||
 | `LDAP_URL`               | ✓                       | ldap://directory.umd.edu                                                                     |
 | `LDAP_BASE_DN`           | ✓                       | ou=people,dc=umd,dc=edu                                                                      |
@@ -116,4 +120,6 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
 [IpMapperFilter]: src/main/java/edu/umd/lib/fcrepo/IpMapperFilter.java
 [src/test/resources/test-ip-mapping.properties]: src/test/resources/test-ip-mapping.properties
+[BasicAuthFilter]: src/main/java/edu/umd/lib/fcrepo/BasicAuthFilter.java
+[src/test/resources/basic-auth.properties]: src/test/resources/basic-auth.properties
 [fabric8io docker-maven-plugin]: http://dmp.fabric8.io/

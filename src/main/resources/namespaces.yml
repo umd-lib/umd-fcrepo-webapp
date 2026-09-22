@@ -29,3 +29,4 @@ umd: http://vocab.lib.umd.edu/model#
 umdtype: http://vocab.lib.umd.edu/datatype#
 umdform: http://vocab.lib.umd.edu/form#
 umdact: http://vocab.lib.umd.edu/activity#
+ipgroup: http://ipmanager.lib.umd.edu/groups/

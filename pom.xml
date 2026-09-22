@@ -14,6 +14,8 @@
     <commons-validator.version>1.7</commons-validator.version>
     <commons-lang3.version>3.20.0</commons-lang3.version>
     <fcrepo.version>7.0.0</fcrepo.version>
+    <httpclient5.version>5.6.3</httpclient5.version>
+    <jackson.version>3.2.2</jackson.version>
     <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
     <jakarta-servlet.version>6.1.0</jakarta-servlet.version>
     <jersey.version>4.0.2</jersey.version>
@@ -23,6 +25,7 @@
     <!-- maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format -->
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
+    <mockwebserver3.version>5.5.0</mockwebserver3.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>6.2.19</spring.version>
     <spring-security.version>7.0.6</spring-security.version>
@@ -102,6 +105,19 @@
       <version>${ldaptive.version}</version>
     </dependency>
 
+    <!-- IpMapperFilter -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>${httpclient5.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>tools.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- tests -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -112,6 +128,12 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver3</artifactId>
+      <version>${mockwebserver3.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

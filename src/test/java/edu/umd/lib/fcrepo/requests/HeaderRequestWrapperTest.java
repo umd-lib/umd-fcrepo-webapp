@@ -1,7 +1,6 @@
-package edu.umd.lib.fcrepo;
+package edu.umd.lib.fcrepo.requests;
 
 
-import edu.umd.lib.fcrepo.requests.HeaderRequestWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockFilterConfig;

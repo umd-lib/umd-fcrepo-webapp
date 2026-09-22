@@ -16,9 +16,11 @@ services:
     environment:
       - ACTIVEMQ_LOG_LEVEL=INFO
       - CAS_URL_PREFIX=https://shib.idm.umd.edu/shibboleth-idp/profile/cas
+      - CONNECTION_TIMEOUT=120
       - CONTEXT_PATH=/fcrepo
       - FCREPO_BASE_URL=http://fcrepo-local:8080/
       - FCREPO_LOG_LEVEL=DEBUG
+      - IP_MANAGER_SERVICE_URL=https://ipmanager.lib.umd.edu
       - IP_MAPPING_HEADER_NAME=X-Auth-IP-Mapping
       - JWT_SECRET
       - LDAP_URL=ldap://directory.umd.edu

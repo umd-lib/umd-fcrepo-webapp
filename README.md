@@ -59,6 +59,9 @@ destination locations in the image.
 Additional runtime configuration files used by the Docker Compose stack
 are located in the [conf](conf) directory.
 
+For more detailed information about the Dockerfile, see the
+[docs/Dockerfile.md](docs/Dockerfile.md) documentation.
+
 ## Environment Variables
 
 | Name                     | Provided by `compose.yml` | Value provided by `compose.yml`                                                              |
@@ -90,8 +93,9 @@ customizations are:
   the various loggers to an environment variable style (all-caps and with `_`
   instead of `.` as a separator). The purpose is to make runtime configuration
   of logging easier in Docker and Kubernetes contexts.
-* Added a property to control the log level of the `edu.umd` package, allowing
-  configuration of logging in our custom servlets, filters, and wrappers.
+* Added a property to control the log level of the `edu.umd.lib` package,
+  allowing configuration of logging in our custom servlets, filters, and
+  wrappers.
 
 | Logger                    | Environment Variable            | Default in `logback.xml` |
 |---------------------------|---------------------------------|--------------------------|
@@ -116,6 +120,9 @@ To develop and build the project locally, you will need Java 25.0. There is
 a `.java-version` file in the project which will select the correct JDK for
 you if you have [jenv] installed.
 
+This project has been developed using [Eclipse Temurin 25.0], though any Java
+25.0 JDK should work.
+
 To build the WAR file:
 
 ```bash
@@ -124,6 +131,11 @@ mvn clean install
 
 The resulting `umd-fcrepo-webapp-{version}.war` file will be in the `target`
 directory.
+
+The build process also creates a companion JAR artifact containing the
+libraries in the `edu.umd.lib.fcrepo` package of this project. The output
+file is named `umd-fcrepo-webapp-{version}-lib.jar`, and is also found in
+the `target` directory.
 
 ## Special Thanks
 
@@ -141,3 +153,4 @@ See the [LICENSE](LICENSE) file for license rights and limitations
 [Java 25.0]: https://adoptium.net/temurin/release-notes?version=25
 [Tomcat 10.1]: https://tomcat.apache.org/tomcat-10.1-doc/index.html
 [Fedora 7.0]: https://fedorarepository.org/fedora7announcement/
+[Eclipse Temurin 25.0]: https://adoptium.net/temurin/releases?version=25

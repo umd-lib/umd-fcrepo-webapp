@@ -168,6 +168,8 @@
               </includes>
             </resource>
           </webResources>
+          <attachClasses>true</attachClasses>
+          <classesClassifier>lib</classesClassifier>
         </configuration>
       </plugin>
       <plugin>

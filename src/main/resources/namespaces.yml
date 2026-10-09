@@ -23,6 +23,11 @@ xs: http://www.w3.org/2001/XMLSchema
 fedoraconfig: http://fedora.info/definitions/v4/config#
 foaf: http://xmlns.com/foaf/0.1/
 dc: http://purl.org/dc/elements/1.1/
+# additional common namespaces
+edm: http://www.europeana.eu/schemas/edm/
+fabio: http://purl.org/spar/fabio/
+pcdm: http://pcdm.org/models#
+pcdmuse: http://pcdm.org/use#
 # UMD custom RDF namespaces
 umdaccess: http://vocab.lib.umd.edu/access#
 umd: http://vocab.lib.umd.edu/model#

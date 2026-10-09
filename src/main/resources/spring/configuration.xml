@@ -131,6 +131,10 @@
     </property>
   </bean>
 
+  <bean name="basicAuthFilter" class="edu.umd.lib.fcrepo.BasicAuthFilter">
+    <property name="credentialsFile" value="${CREDENTIALS_FILE}"/>
+  </bean>
+
   <bean name="ldapConnectionPool" class="org.ldaptive.pool.BlockingConnectionPool">
     <constructor-arg ref="ldapConnectionFactory"/>
     <constructor-arg ref="ldapPoolConfig"/>

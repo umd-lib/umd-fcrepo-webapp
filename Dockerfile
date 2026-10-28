@@ -7,6 +7,12 @@
 # where <VERSION> is the Docker image version to create.
 FROM maven:3.8.6-eclipse-temurin-8 AS compile
 
+# remove vulnerable CA certs (see: https://ops.java/emudhra)
+RUN keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag1 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag2 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsigneccrootcag3 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "comodoaaaca [jdk]"
+
 ENV SOURCE_DIR=/opt/umd-fcrepo-webapp
 COPY src $SOURCE_DIR/src
 COPY pom.xml $SOURCE_DIR
@@ -21,6 +27,12 @@ ENV CONTEXT_PATH=""
 ENV TOMCAT_HEAP=2048m
 # default connection timout is 120 seconds (120,000 ms)
 ENV CONNECTION_TIMEOUT=120000
+
+# remove vulnerable CA certs (see: https://ops.java/emudhra)
+RUN keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag1 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag2 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsigneccrootcag3 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "comodoaaaca [jdk]"
 
 RUN mkdir -p /opt/umd-fcrepo-webapp
 COPY --from=compile /opt/umd-fcrepo-webapp/target/umd-fcrepo-webapp.war /opt/umd-fcrepo-webapp/

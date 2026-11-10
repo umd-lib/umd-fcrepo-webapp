@@ -52,6 +52,18 @@
       <version>${fcrepo.version}</version>
       <type>war</type>
     </dependency>
+    <!-- for compiling against the fcrepo/Shiro auth classes; the jars are already in the fcrepo-webapp war -->
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-auth-common</artifactId>
+      <version>${fcrepo.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sts</artifactId>
+      <version>2.42.5</version>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.servlet</groupId>

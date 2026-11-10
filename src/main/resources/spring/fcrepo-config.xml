@@ -86,6 +86,15 @@
     </property>
   </bean>
 
+  <!-- Replaces fcrepo's "headerProvider" bean (defined in org.fcrepo.webapp.AuthConfig), which
+       can cause the wrong user to be recorded as "created by"/"modified by". An XML bean
+       definition takes precedence over an @Bean method with the same name. This bean is
+       only used when "fcrepo.auth.principal.header.enabled" is true. -->
+  <bean name="headerProvider" class="edu.umd.lib.fcrepo.filters.RequestScopedHeaderPrincipalProvider">
+    <property name="headerName" value="#{authPropsConfig.authPrincipalHeaderName}"/>
+    <property name="separator" value="#{authPropsConfig.authPrincipalHeaderSeparator}"/>
+  </bean>
+
   <bean name="ipMapperFilter" class="edu.umd.lib.fcrepo.filters.IpMapperFilter">
     <property name="headerName" value="${IP_MAPPING_HEADER_NAME}"/>
     <property name="ipManagerServiceUrl" value="${IP_MANAGER_SERVICE_URL}"/>

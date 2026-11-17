@@ -52,6 +52,13 @@
       <version>${fcrepo.version}</version>
       <type>war</type>
     </dependency>
+    <!-- AWS STS for ocfl-s3 IRSA support (fcrepo/fcrepo#2312); remove once fcrepo.version includes it.
+         Keep the version in sync with the AWS SDK version bundled in the fcrepo-webapp war. -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sts</artifactId>
+      <version>2.42.5</version>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.servlet</groupId>
